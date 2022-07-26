@@ -1,6 +1,6 @@
 {
-  "name": "beit-bina-att",
-  "displayName": "נוכחות בית בינה",
+  "name": "meir-att",
+  "displayName": "נוכחות מאיר",
   "customDomain": true,
   "version": "1.0.0",
   "description": "MySQL, Express, React/Redux Boilerplate Application",
