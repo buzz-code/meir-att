@@ -20,7 +20,7 @@ export class YemotCall extends CallBase {
                 );
             }
             // const klass = await this.getKlass(teacher);
-            const lesson = await this.getLesson();
+            const lesson = await this.getLesson(teacher);
             this.params.baseReport = {
                 user_id: this.user.id,
                 teacher_id: teacher.tz,
@@ -86,8 +86,8 @@ export class YemotCall extends CallBase {
         return klass;
     }
 
-    async getLesson(isRetry = false) {
-        const message = isRetry ? this.texts.tryAgain : this.texts.typeLessonId;
+    async getLesson(teacher, isRetry = false) {
+        const message = isRetry ? this.texts.tryAgain : format(this.texts.typeLessonId, teacher.name);
         await this.send(
             this.read({ type: 'text', text: message },
                 'lessonId', 'tap', { max: 9, min: 1, block_asterisk: true })
