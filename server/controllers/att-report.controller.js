@@ -24,7 +24,7 @@ export async function findAll(req, res) {
         .query(qb => {
             qb.leftJoin('students', 'students.tz', 'att_reports.student_tz')
             qb.leftJoin('teachers', 'teachers.tz', 'att_reports.teacher_id')
-            qb.leftJoin('klasses', 'klasses.key', 'att_reports.klass_id')
+            // qb.leftJoin('klasses', 'klasses.key', 'att_reports.klass_id')
             qb.leftJoin('lessons', 'lessons.key', 'att_reports.lesson_id')
             qb.select('att_reports.*')
         });
@@ -55,7 +55,7 @@ export async function getEditData(req, res) {
 export async function handleEmail(req, res) {
     try {
         const data = await getAndParseExcelEmail(req, res);
-        const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count', 'approved_abs_count'];
+        const columns = [/*'klass_id',*/ 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count', 'approved_abs_count'];
         const body = getDataToSave(data, columns);
         const report_date = new Date().toISOString().substr(0, 10);
         body.forEach(item => {

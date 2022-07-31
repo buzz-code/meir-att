@@ -19,12 +19,12 @@ export class YemotCall extends CallBase {
                     this.hangup()
                 );
             }
-            const klass = await this.getKlass(teacher);
+            // const klass = await this.getKlass(teacher);
             const lesson = await this.getLesson();
             this.params.baseReport = {
                 user_id: this.user.id,
                 teacher_id: teacher.tz,
-                klass_id: klass.key,
+                // klass_id: klass.key,
                 lesson_id: lesson.key,
                 report_date: new Date().toISOString().substr(0, 10),
             };
@@ -34,10 +34,10 @@ export class YemotCall extends CallBase {
                     'reportType', 'tap', { max: 1, min: 1, block_asterisk: true })
             );
             if (this.params.reportType === '1') {
-                await this.getStudentReports(klass);
+                await this.getStudentReports(lesson);
             }
             else if (this.params.reportType === '2') {
-                await this.getStudentGrades(klass);
+                await this.getStudentGrades(lesson);
             }
             try {
                 // for (const studentId in this.params.studentReports) {
@@ -108,8 +108,8 @@ export class YemotCall extends CallBase {
         return lesson;
     }
 
-    async getStudentReports(klass) {
-        const existingReports = await queryHelper.getExistingReport(this.user.id, klass.key, this.params.baseReport.lesson_id);
+    async getStudentReports(lesson) {
+        const existingReports = await queryHelper.getExistingReport(this.user.id, /*klass.key,*/ this.params.baseReport.lesson_id);
         let idsToSkip = new Set();
         if (existingReports.length > 0) {
             await this.send(
@@ -127,7 +127,7 @@ export class YemotCall extends CallBase {
                 'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
         );
 
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassId(this.user.id, klass.key);
+        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, lesson.klasses);
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
 
         let isFirstTime = true;
@@ -200,8 +200,8 @@ export class YemotCall extends CallBase {
         }
     }
 
-    async getStudentGrades(klass) {
-        const existingReports = await queryHelper.getExistingGrades(this.user.id, klass.key, this.params.baseReport.lesson_id);
+    async getStudentGrades(lesson) {
+        const existingReports = await queryHelper.getExistingGrades(this.user.id, /*klass.key,*/ this.params.baseReport.lesson_id);
         let idsToSkip = new Set();
         if (existingReports.length > 0) {
             await this.send(
@@ -219,7 +219,7 @@ export class YemotCall extends CallBase {
                 'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
         );
 
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassId(this.user.id, klass.key);
+        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, lesson.klasses);
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
 
         let isFirstTime = true;

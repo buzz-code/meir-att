@@ -34,22 +34,22 @@ export function getLessonByUserIdAndLessonId(user_id, key) {
         .then(res => res ? res.toJSON() : null);
 }
 
-export function getExistingReport(user_id, klass_id, lesson_id) {
-    return new AttReport().where({ user_id, klass_id, lesson_id })
+export function getExistingReport(user_id, /*klass_id,*/ lesson_id) {
+    return new AttReport().where({ user_id, /*klass_id,*/ lesson_id })
         .where('report_date', '>=', moment().add(-7, 'days').toISOString().substr(0, 10))
         .fetchAll()
         .then(res => res ? res.toJSON() : null);
 }
 
-export function getExistingGrades(user_id, klass_id, lesson_id) {
-    return new Grade().where({ user_id, klass_id, lesson_id })
+export function getExistingGrades(user_id, /*klass_id,*/ lesson_id) {
+    return new Grade().where({ user_id, /*klass_id,*/ lesson_id })
         .where('report_date', '>=', moment().add(-7, 'days').toISOString().substr(0, 10))
         .fetchAll()
         .then(res => res ? res.toJSON() : null);
 }
 
-export function getStudentsByUserIdAndKlassId(user_id, klass_id) {
-    return new StudentKlass().where({ user_id, klass_id })
+export function getStudentsByUserIdAndKlassIds(user_id, klasses) {
+    return new StudentKlass().where({ user_id }).where('klass_id', 'in', klasses?.split(','))
         .fetchAll({ withRelated: [{ student: function (query) { query.orderBy('name'); } }] })
         .then(res => res.toJSON())
         .then(res => res.map(item => item.student));

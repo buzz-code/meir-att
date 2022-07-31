@@ -23,16 +23,16 @@ export async function findAll(req, res) {
         .query(qb => {
             qb.leftJoin('att_reports_and_grades', 'students.tz', 'att_reports_and_grades.student_tz')
             qb.leftJoin('teachers', 'teachers.tz', 'att_reports_and_grades.teacher_id')
-            qb.leftJoin('klasses', 'klasses.key', 'att_reports_and_grades.klass_id')
+            // qb.leftJoin('klasses', 'klasses.key', 'att_reports_and_grades.klass_id')
             qb.leftJoin('lessons', 'lessons.key', 'att_reports_and_grades.lesson_id')
         });
     applyFilters(dbQuery, req.query.filters);
     const countQuery = dbQuery.clone().query()
-        .countDistinct({ count: ['student_tz', 'teacher_id', 'klass_id', 'lesson_id'] })
+        .countDistinct({ count: ['student_tz', 'teacher_id', /*'klass_id',*/ 'lesson_id'] })
         .then(res => res[0].count);
     dbQuery.query(qb => {
-        qb.groupBy(['student_tz', 'teacher_id', 'klass_id', 'lesson_id'])
-        qb.select('student_tz', 'teacher_id', 'klass_id', 'lesson_id')
+        qb.groupBy(['student_tz', 'teacher_id', /*'klass_id',*/ 'lesson_id'])
+        qb.select('student_tz', 'teacher_id', /*'klass_id',*/ 'lesson_id')
         qb.min({
             report_date: 'report_date',
         })
