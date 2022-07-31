@@ -1,6 +1,6 @@
 {
   "name": "meir-att",
-  "displayName": "נוכחות מאיר",
+  "displayName": "נוכחות סמינר זכרון צבי",
   "customDomain": true,
   "version": "1.0.0",
   "description": "MySQL, Express, React/Redux Boilerplate Application",
@@ -14,7 +14,8 @@
     "migrate": "knex migrate:latest",
     "migrate:make": "knex migrate:make",
     "migrate:rollback": "knex migrate:rollback",
-    "lint": "eslint client server; exit 0"
+    "lint": "eslint client server; exit 0",
+    "yemot-demo": "node common-modules/yemot-demo"
   },
   "repository": {
     "type": "git",
