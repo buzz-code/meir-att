@@ -6,8 +6,8 @@ const getColumns = () => [
   { field: 'key', title: 'מזהה' },
   { field: 'name', title: 'שם' },
   { field: 'klasses', title: 'כיתות' },
-  { field: 'start_date', title: 'תאריך התחלה' },
-  { field: 'end_date', title: 'תאריך סיום' },
+  { field: 'start_date', title: 'תאריך התחלה', type: 'date' },
+  { field: 'end_date', title: 'תאריך סיום', type: 'date' },
 ];
 const getFilters = () => [
   { field: 'key', label: 'מזהה', type: 'text', operator: 'like' },
