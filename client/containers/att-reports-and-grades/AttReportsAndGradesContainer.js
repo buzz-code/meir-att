@@ -33,7 +33,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
   },
   { field: 'report_date', title: 'תאריך הדיווח', type: 'date' },
   { field: 'abs_count', title: 'חיסורים', type: 'numeric' },
-  { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
+  // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
   { field: 'grade', title: 'ציון' },
 ];
 const getFilters = ({ students, teachers, klasses, lessons }) => [
@@ -73,7 +73,7 @@ const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'report_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
   { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
   { field: 'abs_count', label: 'חיסורים', type: 'text', operator: 'like' },
-  { field: 'approved_abs_count', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
+  // { field: 'approved_abs_count', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
   { field: 'grade', label: 'ציון', type: 'text', operator: 'like' },
 ];
 

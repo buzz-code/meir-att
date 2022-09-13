@@ -38,7 +38,7 @@ const supportedEntities = [
       'lesson_id',
       'report_date',
       'abs_count',
-      'approved_abs_count',
+      // 'approved_abs_count',
       'comments',
     ],
   },
