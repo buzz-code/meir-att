@@ -7,6 +7,7 @@ const getColumns = () => [
   { field: 'name', title: 'שם' },
   { field: 'phone', title: 'מספר טלפון' },
   { field: 'phone2', title: '2 מספר טלפון' },
+  { field: 'email', title: 'כתובת מייל' },
 ];
 const getFilters = () => [
   { field: 'tz', label: 'תעודת זהות', type: 'text', operator: 'like' },

@@ -6,9 +6,17 @@ import ExcelImport from '../../../common-modules/client/components/excel-import/
 
 const title = 'העלאת קובץ';
 const supportedEntities = [
-  { value: entities.TEACHERS, title: titles.TEACHERS, columns: ['tz', 'name', 'phone'] },
+  {
+    value: entities.TEACHERS,
+    title: titles.TEACHERS,
+    columns: ['tz', 'name', 'phone', 'phone2', 'email'],
+  },
   { value: entities.STUDENTS, title: titles.STUDENTS, columns: ['tz', 'name'] },
-  { value: entities.LESSONS, title: titles.LESSONS, columns: ['key', 'name', 'klasses'] },
+  {
+    value: entities.LESSONS,
+    title: titles.LESSONS,
+    columns: ['key', 'name', 'klasses', 'start_date', 'end_date'],
+  },
   { value: entities.KLASSS, title: titles.KLASSS, columns: ['key', 'name'] },
   {
     value: entities.STUDENT_KLASSES,

@@ -6,6 +6,7 @@ import * as crudAction from '../../../common-modules/client/actions/crudAction';
 import { getPropsForAutoComplete } from '../../../common-modules/client/utils/formUtil';
 
 const getColumns = ({ students, klasses }) => [
+  { field: 'student_tz', title: 'תלמידה', editable: 'never' },
   {
     field: 'student_tz',
     title: 'תלמידה',
@@ -20,6 +21,7 @@ const getColumns = ({ students, klasses }) => [
   },
 ];
 const getFilters = ({ students, klasses }) => [
+  { field: 'תלמידה', label: 'תעודת זהות', type: 'text', operator: 'like' },
   {
     field: 'students.tz',
     label: 'תלמידה',
