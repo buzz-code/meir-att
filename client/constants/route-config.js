@@ -97,13 +97,13 @@ export default [
       title: titles.TEXTS,
       props: { entity: entities.TEXTS, title: titles.TEXTS },
     },
-    // {
-    //   path: '/klass-types',
-    //   component: KlassTypes,
-    //   icon: MenuIcon,
-    //   title: titles.KLASS_TYPES,
-    //   props: { entity: entities.KLASS_TYPES, title: titles.KLASS_TYPES },
-    // },
+    {
+      path: '/klass-types',
+      component: KlassTypes,
+      icon: MenuIcon,
+      title: titles.KLASS_TYPES,
+      props: { entity: entities.KLASS_TYPES, title: titles.KLASS_TYPES },
+    },
     {
       path: '/att-reports',
       component: AttReports,

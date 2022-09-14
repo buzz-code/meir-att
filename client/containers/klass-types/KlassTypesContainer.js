@@ -15,7 +15,7 @@ const KlassTypesContainer = ({ entity, title }) => {
   const columns = useMemo(() => getColumns(), []);
   const filters = useMemo(() => getFilters(), []);
 
-  return <Table entity={entity} title={title} columns={columns} filters={filters} disableAdd={true} disableDelete={true} disableUpdate={true} />;
+  return <Table entity={entity} title={title} columns={columns} filters={filters} />;
 };
 
 export default KlassTypesContainer;
