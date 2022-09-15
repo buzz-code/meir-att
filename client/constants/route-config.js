@@ -5,6 +5,7 @@ import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import ListIcon from '@material-ui/icons/List';
 import GroupIcon from '@material-ui/icons/Group';
 import ChatIcon from '@material-ui/icons/Chat';
+import MailIcon from '@material-ui/icons/Mail';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import FormatListNumberedRtlIcon from '@material-ui/icons/FormatListNumberedRtl';
@@ -38,6 +39,7 @@ import GroupsPrint from '../containers/groups-print/GroupsPrintContainer';
 import ExcelImport from '../containers/excel-import/ExcelImportContainer';
 import KnownAbsences from '../containers/known-absences/KnownAbsencesContainer';
 import AttReportsWithKnownAbsences from '../containers/att-reports-with-known-absences/AttReportsWithKnownAbsencesContainer';
+import TeacherReportStatus from '../containers/teacher-report-status/TeacherReportStatusContainer';
 
 export default [
   [
@@ -135,6 +137,18 @@ export default [
   ],
   [
     { path: '/excel-import', component: ExcelImport, icon: FileCopyIcon, title: 'העלאת קבצים' },
+    {
+      path: '/teacher-report-status',
+      component: TeacherReportStatus,
+      icon: MailIcon,
+      title: titles.TEACHER_REPORT_STATUS,
+      props: {
+        entity: entities.TEACHER_REPORT_STATUS,
+        title: titles.TEACHER_REPORT_STATUS,
+      },
+    },
+  ],
+  [
     // {
     //   path: '/groups-print',
     //   component: GroupsPrint,

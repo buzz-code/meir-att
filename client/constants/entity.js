@@ -20,3 +20,4 @@ export const ORGANIATION_REPORTS = 'reports/getOrganizationReport';
 export const DASHBOARD = 'dashboard';
 export const KNOWN_ABSENCES = 'known-absences';
 export const ATT_REPORTS_WITH_KNOWN_ABSENCES = 'att-reports/report-with-known-absences';
+export const TEACHER_REPORT_STATUS = 'teachers/teachers-with-report-status';
