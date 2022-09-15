@@ -16,8 +16,8 @@ const getColumns = () => [
   },
 ];
 const getFilters = () => [
-  { field: 'teachers.name', label: 'מורה', type: 'text', operator: 'like' },
-  { field: 'lessons.name', label: 'שיעור', type: 'text', operator: 'like' },
+  { field: 'teacher_name', label: 'מורה', type: 'text', operator: 'like' },
+  { field: 'lesson_name', label: 'שיעור', type: 'text', operator: 'like' },
   {
     field: 'is_report_sent',
     label: 'האם נשלח דיווח',
