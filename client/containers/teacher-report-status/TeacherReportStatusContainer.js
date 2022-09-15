@@ -1,6 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Table from '../../../common-modules/client/components/table/Table';
+import * as crudAction from '../../../common-modules/client/actions/crudAction';
 import { getPropsForAutoComplete } from '../../../common-modules/client/utils/formUtil';
 import { booleanList } from '../../../common-modules/server/utils/list';
 
@@ -26,10 +28,29 @@ const getFilters = () => [
     list: booleanList,
   },
 ];
+const getActions = (handleSendEmailToAll) => [
+  {
+    icon: 'mail',
+    tooltip: 'שלח מייל לכל המורות',
+    isFreeAction: true,
+    onClick: handleSendEmailToAll,
+  },
+];
 
 const TeacherReportStatusContainer = ({ entity, title }) => {
+  const dispatch = useDispatch();
+
+  const [conditions, setConditions] = useState({});
+
+  const handleSendEmailToAll = useCallback(() => {
+    dispatch(
+      crudAction.customHttpRequest(entity, 'POST', 'send-email-to-all', { filters: conditions })
+    );
+  }, [entity, conditions]);
+
   const columns = useMemo(() => getColumns(), []);
   const filters = useMemo(() => getFilters(), []);
+  const actions = useMemo(() => getActions(handleSendEmailToAll), [handleSendEmailToAll]);
 
   return (
     <Table
@@ -37,9 +58,11 @@ const TeacherReportStatusContainer = ({ entity, title }) => {
       title={title}
       columns={columns}
       filters={filters}
+      additionalActions={actions}
       disableAdd={true}
       disableUpdate={true}
       disableDelete={true}
+      onConditionUpdate={setConditions}
     />
   );
 };

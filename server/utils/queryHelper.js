@@ -8,6 +8,7 @@ import Lesson from "../models/lesson.model";
 import Group from "../models/group.model";
 import AttReport from "../models/att-report.model";
 import Grade from "../models/grade.model";
+import Text from "../models/text.model";
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })
@@ -62,4 +63,21 @@ export async function getDiaryDataByGroupId(group_id) {
     const students = await getStudentsByUserIdAndKlassId(group.user_id, group.klass_id);
 
     return { group, students: students.sort((a, b) => a.name.localeCompare(b.name)) };
+}
+
+function getTextByUserIdAndName(user_id, name) {
+    return new Text()
+        .where({ user_id, name })
+        .fetch()
+        .then(res => res.toJSON())
+        .then(res => res.value);
+}
+
+export async function getEmailFields(user_id) {
+    const [subjectText, bodyText] = await Promise.all([
+        getTeacherByUserIdAndPhone(user_id, 'teacherReportStatusEmailSubject'),
+        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailBody'),
+    ]);
+
+    return { subjectText, bodyText };
 }
