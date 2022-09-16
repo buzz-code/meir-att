@@ -34,7 +34,7 @@ export async function sendEmailToAllTeachers(req, res) {
         if (!teacher.teacher_email) {
             continue;
         }
-        await sendEmail(teacher.teacher_email, process.env.FROM_EMAIL_ADDRESS, subjectText, bodyText);
+        await sendEmail(teacher.teacher_email, 'נוכחות זכרון צבי <zzv@email.yomanet.com>', subjectText, bodyText);
     }
     res.json({
         error: null,
