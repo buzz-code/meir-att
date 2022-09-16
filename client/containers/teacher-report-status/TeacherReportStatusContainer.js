@@ -27,6 +27,8 @@ const getFilters = () => [
     operator: 'eq',
     list: booleanList,
   },
+  { field: 'lesson_end_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
+  { field: 'lesson_start_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
 ];
 const getActions = (handleSendEmailToAll) => [
   {
