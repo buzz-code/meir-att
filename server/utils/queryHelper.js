@@ -75,7 +75,7 @@ function getTextByUserIdAndName(user_id, name) {
 
 export async function getEmailFields(user_id) {
     const [subjectText, bodyText] = await Promise.all([
-        getTeacherByUserIdAndPhone(user_id, 'teacherReportStatusEmailSubject'),
+        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailSubject'),
         getTextByUserIdAndName(user_id, 'teacherReportStatusEmailBody'),
     ]);
 
