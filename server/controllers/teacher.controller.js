@@ -14,18 +14,18 @@ function getDatesFromFilters(filters) {
     };
     try {
         const conditions = JSON.parse(filters);
-        if (conditions?.[3]?.value) {
-            dates.startDate = conditions[3].value;
+        if (conditions?.[2]?.value) {
+            dates.startDate = conditions[2].value;
         }
-        if (conditions?.[4]?.value) {
-            dates.endDate = conditions[4].value;
+        if (conditions?.[3]?.value) {
+            dates.endDate = conditions[3].value;
         }
     } catch {
     }
     return dates;
 }
 
-function getFindAllQuery(user_id, filters) {
+export function getFindAllQuery(user_id, filters) {
     const { startDate, endDate } = getDatesFromFilters(filters);
     const dbQuery = new Teacher()
         .where({ 'teachers.user_id': user_id })
