@@ -18,7 +18,7 @@ export async function findAll(req, res) {
     const dbQuery = new KnownAbsence()
         .where({ 'known_absences.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('students', 'students.tz', 'known_absences.student_tz')
+            qb.leftJoin('students', { 'students.tz': 'known_absences.student_tz', 'students.user_id': 'known_absences.user_id' })
             qb.select('known_absences.*')
         });
     applyFilters(dbQuery, req.query.filters);

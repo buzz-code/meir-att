@@ -16,7 +16,7 @@ export async function findAll(req, res) {
     const dbQuery = new Klass()
         .where({ 'klasses.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('klass_types', 'klass_types.id', 'klasses.klass_type_id')
+            qb.leftJoin('klass_types', { 'klass_types.id': 'klasses.klass_type_id', 'klass_types.user_id': 'klasses.user_id' })
             qb.select('klasses.*')
         });
     applyFilters(dbQuery, req.query.filters);

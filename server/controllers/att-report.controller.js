@@ -22,10 +22,10 @@ export async function findAll(req, res) {
     const dbQuery = new AttReport()
         .where({ 'att_reports.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('students', 'students.tz', 'att_reports.student_tz')
-            qb.leftJoin('teachers', 'teachers.tz', 'att_reports.teacher_id')
-            // qb.leftJoin('klasses', 'klasses.key', 'att_reports.klass_id')
-            qb.leftJoin('lessons', 'lessons.key', 'att_reports.lesson_id')
+            qb.leftJoin('students', { 'students.tz': 'att_reports.student_tz', 'students.user_id': 'att_reports.user_id' })
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
+            // qb.leftJoin('klasses', { 'klasses.key': 'att_reports.klass_id', 'klasses.user_id': 'att_reports.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
             qb.select('att_reports.*')
         });
     applyFilters(dbQuery, req.query.filters);
@@ -89,8 +89,8 @@ export async function getPivotData(req, res) {
     const dbQuery = new Student()
         .where({ 'students.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('student_klasses', 'student_klasses.student_tz', 'students.tz')
-            qb.leftJoin('klasses', 'klasses.key', 'student_klasses.klass_id')
+            qb.leftJoin('student_klasses', { 'student_klasses.student_tz': 'students.tz', 'student_klasses.user_id': 'students.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
             qb.distinct('students.tz')
         });
 
@@ -104,8 +104,8 @@ export async function getPivotData(req, res) {
     const pivotQuery = new AttReport()
         .where('att_reports.student_tz', 'in', studentsRes.data.map(item => item.tz))
         .query(qb => {
-            qb.leftJoin('teachers', 'teachers.tz', 'att_reports.teacher_id')
-            qb.leftJoin('lessons', 'lessons.key', 'att_reports.lesson_id')
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
             qb.select('att_reports.*')
             qb.select({
                 teacher_name: 'teachers.name',

@@ -14,9 +14,9 @@ function getFindAllQuery(user_id, filters) {
     const dbQuery = new Group()
         .where({ 'groups.user_id': user_id })
         .query(qb => {
-            qb.leftJoin('klasses', 'klasses.key', 'groups.klass_id')
-            qb.leftJoin('teachers', 'teachers.tz', 'groups.teacher_id')
-            qb.leftJoin('lessons', 'lessons.key', 'groups.lesson_id')
+            qb.leftJoin('klasses', { 'klasses.key': 'groups.klass_id', 'klasses.user_id': 'groups.user_id' })
+            qb.leftJoin('teachers', { 'teachers.tz': 'groups.teacher_id', 'teachers.user_id': 'groups.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'groups.lesson_id', 'lessons.user_id': 'groups.user_id' })
             qb.select('groups.*')
         });
     applyFilters(dbQuery, filters);

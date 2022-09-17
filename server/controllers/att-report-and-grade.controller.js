@@ -19,12 +19,12 @@ export const { findById, store, update, destroy, uploadMultiple } = genericContr
  */
 export async function findAll(req, res) {
     const dbQuery = new Student()
-        .where({ 'att_reports_and_grades.user_id': req.currentUser.id })
+        .where({ 'students.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('att_reports_and_grades', 'students.tz', 'att_reports_and_grades.student_tz')
-            qb.leftJoin('teachers', 'teachers.tz', 'att_reports_and_grades.teacher_id')
-            // qb.leftJoin('klasses', 'klasses.key', 'att_reports_and_grades.klass_id')
-            qb.leftJoin('lessons', 'lessons.key', 'att_reports_and_grades.lesson_id')
+            qb.leftJoin('att_reports_and_grades', { 'students.tz': 'att_reports_and_grades.student_tz', 'students.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
+            // qb.leftJoin('klasses', { 'klasses.key': 'att_reports_and_grades.klass_id', 'klasses.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
         });
     applyFilters(dbQuery, req.query.filters);
     const countQuery = dbQuery.clone().query()
@@ -104,8 +104,8 @@ export async function getPivotData(req, res) {
     const dbQuery = new Student()
         .where({ 'students.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('student_klasses', 'student_klasses.student_tz', 'students.tz')
-            qb.leftJoin('klasses', 'klasses.key', 'student_klasses.klass_id')
+            qb.leftJoin('student_klasses', { 'student_klasses.student_tz': 'students.tz', 'student_klasses.user_id': 'students.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
             qb.distinct('students.tz')
         });
 
@@ -119,8 +119,8 @@ export async function getPivotData(req, res) {
     const pivotQuery = new AttReportAndGrade()
         .where('att_reports_and_grades.student_tz', 'in', studentsRes.data.map(item => item.tz))
         .query(qb => {
-            qb.leftJoin('teachers', 'teachers.tz', 'att_reports_and_grades.teacher_id')
-            qb.leftJoin('lessons', 'lessons.key', 'att_reports_and_grades.lesson_id')
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
             qb.select('att_reports_and_grades.*')
             qb.select({
                 teacher_name: 'teachers.name',

@@ -18,8 +18,8 @@ export async function findAll(req, res) {
     const dbQuery = new StudentKlass()
         .where({ 'student_klasses.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('students', 'students.tz', 'student_klasses.student_tz')
-            qb.leftJoin('klasses', 'klasses.key', 'student_klasses.klass_id')
+            qb.leftJoin('students', { 'students.tz': 'student_klasses.student_tz', 'students.user_id': 'student_klasses.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
             qb.select('student_klasses.*')
         });
     applyFilters(dbQuery, req.query.filters);
@@ -53,10 +53,10 @@ export async function getEditData(req, res) {
  */
 export async function reportByKlassType(req, res) {
     const dbQuery = new StudentKlass()
-        .where({ 'klasses.user_id': req.currentUser.id })
+        .where({ 'student_klasses.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('students', 'students.tz', 'student_klasses.student_tz')
-            qb.leftJoin('klasses', 'klasses.key', 'student_klasses.klass_id')
+            qb.leftJoin('students', { 'students.tz': 'student_klasses.student_tz', 'students.user_id': 'student_klasses.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
         });
     applyFilters(dbQuery, req.query.filters);
     const countQuery = dbQuery.clone().query()
