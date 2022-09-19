@@ -15,7 +15,7 @@ const supportedEntities = [
   {
     value: entities.LESSONS,
     title: titles.LESSONS,
-    columns: ['key', 'name', 'klasses', 'start_date', 'end_date'],
+    columns: ['key', 'name', 'klasses', 'teacher_id', 'start_date', 'end_date'],
   },
   { value: entities.KLASSS, title: titles.KLASSS, columns: ['key', 'name'] },
   {
