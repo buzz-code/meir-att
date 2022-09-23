@@ -110,6 +110,12 @@ export default [
           title: titles.KLASS_TYPES,
           props: { entity: entities.KLASS_TYPES, title: titles.KLASS_TYPES },
         },
+      ],
+    },
+    {
+      icon: AssignmentTurnedInIcon,
+      title: 'נתונים',
+      subItems: [
         {
           path: '/att-reports',
           component: AttReports,
