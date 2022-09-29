@@ -1,4 +1,5 @@
 import HttpStatus from 'http-status-codes';
+import format from 'string-format';
 import Teacher from '../models/teacher.model';
 import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { sendEmail } from '../../common-modules/server/utils/mailer';
@@ -74,7 +75,10 @@ export async function sendEmailToAllTeachers(req, res) {
         data
             .filter(item => !item.is_report_sent)
             .filter(item => item.teacher_email)
-            .map(item => ([item.teacher_email, item.teacher_name]))
+            .map(item => ([item.teacher_email, {
+                name: item.teacher_name,
+                lesson_name: item.lesson_name
+            }]))
     );
 
     if (Object.keys(teachersToSend).length > 100) {
@@ -86,7 +90,9 @@ export async function sendEmailToAllTeachers(req, res) {
     const { subjectText, bodyText } = await getEmailFields(req.currentUser.id);
 
     for (const teacher_email in teachersToSend) {
-        await sendEmail(teacher_email, 'נוכחות זכרון צבי <zzv@email.yomanet.com>', subjectText, bodyText);
+        const teacherDetails = teachersToSend[teacher_email];
+        const body = format(bodyText, teacherDetails.name, teacherDetails.lesson_name);
+        await sendEmail(teacher_email, 'נוכחות זכרון צבי <zzv@email.yomanet.com>', subjectText, body);
     }
 
     res.json({
