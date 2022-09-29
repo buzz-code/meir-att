@@ -5,7 +5,7 @@ import Table from '../../../common-modules/client/components/table/Table';
 import * as crudAction from '../../../common-modules/client/actions/crudAction';
 import { getPropsForAutoComplete } from '../../../common-modules/client/utils/formUtil';
 
-const getColumns = ({ klassTypes }) => [
+const getColumns = ({ klassTypes, teachers }) => [
   { field: 'key', title: 'מזהה' },
   { field: 'name', title: 'שם' },
   {
@@ -13,6 +13,12 @@ const getColumns = ({ klassTypes }) => [
     title: 'סוג כיתה',
     columnOrder: 'klass_types.name',
     ...getPropsForAutoComplete('klass_type_id', klassTypes),
+  },
+  {
+    field: 'teacher_id',
+    title: 'מורה',
+    columnOrder: 'teachers.name',
+    ...getPropsForAutoComplete('teacher_id', teachers, 'tz'),
   },
 ];
 const getFilters = ({ klassTypes }) => [
