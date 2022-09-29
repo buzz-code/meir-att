@@ -26,7 +26,7 @@ const getFilters = () => [
 const getActions = (handleSendEmailToAll) => [
   {
     icon: 'mail',
-    tooltip: 'שלח מייל לכל המורות',
+    tooltip: 'שלח מייל לכל המורות שלא שלחו דיווח',
     isFreeAction: true,
     onClick: handleSendEmailToAll,
   },
