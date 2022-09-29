@@ -18,10 +18,17 @@ const getColumns = () => [
   },
 ];
 const getFilters = () => [
+  { field: 'lessons.end_date', label: 'שיעור מתאריך', type: 'date', operator: 'date-before' },
+  { field: 'lessons.start_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
+  {
+    field: 'report_date',
+    label: 'דיווח מתאריך',
+    type: 'date',
+    operator: 'date-before-placeholder',
+  },
+  { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after-placeholder' },
   { field: 'teachers.name', label: 'מורה', type: 'text', operator: 'like' },
   { field: 'lessons.name', label: 'שיעור', type: 'text', operator: 'like' },
-  { field: 'lessons.end_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
-  { field: 'lessons.start_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
 ];
 const getActions = (handleSendEmailToAll) => [
   {
