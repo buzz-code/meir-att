@@ -67,7 +67,7 @@ export async function teachersWithReportStatus(req, res) {
 }
 
 export async function sendEmailToAllTeachers(req, res) {
-    const { body: { filters } } = req;
+    const { body: { filters, message } } = req;
     const { dbQuery, countQuery } = getFindAllQuery(req.currentUser.id, JSON.stringify(filters));
     const { data } = await fetchPagePromise({ dbQuery, countQuery }, { page: 0, pageSize: 1000 });
 
@@ -87,7 +87,7 @@ export async function sendEmailToAllTeachers(req, res) {
         });
     }
 
-    const { subjectText, bodyText } = await getEmailFields(req.currentUser.id);
+    const { subjectText, bodyText } = await getEmailFields(req.currentUser.id, message);
 
     for (const teacher_email in teachersToSend) {
         const teacherDetails = teachersToSend[teacher_email];
