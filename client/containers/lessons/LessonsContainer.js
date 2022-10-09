@@ -5,10 +5,16 @@ import Table from '../../../common-modules/client/components/table/Table';
 import * as crudAction from '../../../common-modules/client/actions/crudAction';
 import { getPropsForAutoComplete } from '../../../common-modules/client/utils/formUtil';
 
-const getColumns = ({ teachers }) => [
+const getColumns = ({ teachers, klasses }) => [
   { field: 'key', title: 'מזהה' },
   { field: 'name', title: 'שם' },
   { field: 'klasses', title: 'כיתות' },
+  {
+    field: 'klasses',
+    title: 'כיתה',
+    columnOrder: 'klasses.name',
+    ...getPropsForAutoComplete('klasses', klasses, 'key'),
+  },
   {
     field: 'teacher_id',
     title: 'מורה',
@@ -18,12 +24,12 @@ const getColumns = ({ teachers }) => [
   { field: 'start_date', title: 'תאריך התחלה', type: 'date' },
   { field: 'end_date', title: 'תאריך סיום', type: 'date' },
 ];
-const getFilters = ({ teachers }) => [
+const getFilters = ({ teachers, klasses }) => [
   { field: 'key', label: 'מזהה', type: 'text', operator: 'like' },
   { field: 'name', label: 'שם', type: 'text', operator: 'like' },
-  { field: 'klasses', label: 'כיתות', type: 'text', operator: 'like' },
+  { field: 'klasses', label: 'כיתות', type: 'list', operator: 'eq', list: klasses, idField: 'key' },
   {
-    field: 'teachers.tz',
+    field: 'teacher_id',
     label: 'מורה',
     type: 'list',
     operator: 'eq',
