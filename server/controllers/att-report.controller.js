@@ -8,6 +8,7 @@ import { getDataToSave, getListFromTable } from '../../common-modules/server/uti
 import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
 import bookshelf from '../../common-modules/server/config/bookshelf';
+import Bookshelf from 'bookshelf';
 
 export const { findById, store, update, destroy, uploadMultiple } = genericController(AttReport);
 
@@ -140,6 +141,7 @@ export async function reportWithKnownAbsences(req, res) {
         .where({ 'students.user_id': req.currentUser.id })
         .query(qb => {
             qb.leftJoin('att_reports_with_known_absences', 'students.tz', 'att_reports_with_known_absences.student_tz')
+            qb.leftJoin('student_base_klass', { 'student_base_klass.user_id': 'students.user_id', 'student_base_klass.tz': 'students.user_id' })
         });
     applyFilters(dbQuery, req.query.filters);
     const countQuery = dbQuery.clone().query()
@@ -150,6 +152,7 @@ export async function reportWithKnownAbsences(req, res) {
         qb.select({
             student_tz: 'students.tz',
             student_name: 'students.name',
+            student_base_klass: bookshelf.knex.raw('GROUP_CONCAT(student_base_klass.student_base_klass SEPARATOR ", ")'),
             known_absences_1: bookshelf.knex.raw('SUM(if(absnce_code = 1, absnce_count, null))'),
             known_absences_2: bookshelf.knex.raw('SUM(if(absnce_code = 2, absnce_count, null))'),
         })
