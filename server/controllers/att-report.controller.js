@@ -25,7 +25,7 @@ export async function findAll(req, res) {
         .query(qb => {
             qb.leftJoin('students', { 'students.tz': 'att_reports.student_tz', 'students.user_id': 'att_reports.user_id' })
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
-            // qb.leftJoin('klasses', { 'klasses.key': 'att_reports.klass_id', 'klasses.user_id': 'att_reports.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'att_reports.klass_id', 'klasses.user_id': 'att_reports.user_id' })
             qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
             qb.select('att_reports.*')
         });
