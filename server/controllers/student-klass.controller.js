@@ -62,14 +62,20 @@ export async function reportByKlassType(req, res) {
     const countQuery = dbQuery.clone().query()
         .countDistinct({ count: ['students.id'] })
         .then(res => res[0].count);
+    const klassTypes = {
+        1: [24, 21],
+        2: [25, 22],
+        3: [26, 23],
+    }
+    klassTypes.other = [...klassTypes[1], ...klassTypes[2], ...klassTypes[[3]]]
     dbQuery.query(qb => {
         qb.groupBy('students.id')
         qb.select({
             student_name: 'students.name',
-            klasses_1: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id = 1, klasses.name, null) SEPARATOR ", ")'),
-            klasses_2: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id = 2, klasses.name, null) SEPARATOR ", ")'),
-            klasses_3: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id = 3, klasses.name, null) SEPARATOR ", ")'),
-            klasses_null: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id is null, klasses.name, null) SEPARATOR ", ")'),
+            klasses_1: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id in (' + klassTypes[1].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),
+            klasses_2: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id in (' + klassTypes[2].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),
+            klasses_3: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id in (' + klassTypes[3].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),
+            klasses_null: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id not in (' + klassTypes['other'].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),
         })
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
