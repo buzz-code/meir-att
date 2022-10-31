@@ -92,7 +92,7 @@ export async function sendEmailToAllTeachers(req, res) {
     for (const teacher_email in teachersToSend) {
         const teacherDetails = teachersToSend[teacher_email];
         const body = format(bodyText, teacherDetails.name, teacherDetails.lesson_name);
-        await sendEmail(teacher_email, 'נוכחות זכרון צבי <zzv@email.yomanet.com>', subjectText, body);
+        await sendEmail(teacher_email, req.currentUser.from_email, subjectText, body, undefined, req.currentUser.reply_to_email);
     }
 
     res.json({
