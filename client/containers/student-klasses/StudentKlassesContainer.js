@@ -53,7 +53,9 @@ const StudentKlassesContainer = ({ entity, title }) => {
     dispatch(crudAction.customHttpRequest(entity, 'GET', 'get-edit-data'));
   }, []);
 
-  return <Table entity={entity} title={title} columns={columns} filters={filters} />;
+  return (
+    <Table entity={entity} title={title} columns={columns} filters={filters} isBulkDelete={true} />
+  );
 };
 
 export default StudentKlassesContainer;

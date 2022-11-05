@@ -74,6 +74,7 @@ const LessonsContainer = ({ entity, title }) => {
       columns={columns}
       filters={filters}
       manipulateDataToSave={manipulateDataToSave}
+      isBulkDelete={true}
     />
   );
 };

@@ -106,6 +106,7 @@ const AttReportsContainer = ({ entity, title }) => {
       columns={columns}
       filters={filters}
       manipulateDataToSave={manipulateDataToSave}
+      isBulkDelete={true}
     />
   );
 };

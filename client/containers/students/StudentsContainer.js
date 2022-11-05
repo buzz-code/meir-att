@@ -15,7 +15,9 @@ const StudentsContainer = ({ entity, title }) => {
   const columns = useMemo(() => getColumns(), []);
   const filters = useMemo(() => getFilters(), []);
 
-  return <Table entity={entity} title={title} columns={columns} filters={filters} />;
+  return (
+    <Table entity={entity} title={title} columns={columns} filters={filters} isBulkDelete={true} />
+  );
 };
 
 export default StudentsContainer;
