@@ -1,6 +1,4 @@
-import StudentKlass from '../models/student-klass.model';
-import Student from '../models/student.model';
-import Klass from '../models/klass.model';
+import { StudentKlass, Student, Klass } from '../models';
 import genericController, { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
 import bookshelf from '../../common-modules/server/config/bookshelf';

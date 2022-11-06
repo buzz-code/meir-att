@@ -1,14 +1,6 @@
 import moment from "moment";
 import bookshelf from '../../common-modules/server/config/bookshelf';
-import Klass from "../models/klass.model";
-import Teacher from "../models/teacher.model";
-import User from "../models/user.model";
-import StudentKlass from "../models/student-klass.model";
-import Lesson from "../models/lesson.model";
-import Group from "../models/group.model";
-import AttReport from "../models/att-report.model";
-import Grade from "../models/grade.model";
-import Text from "../models/text.model";
+import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text } from "../models";
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })

@@ -1,6 +1,4 @@
-import KnownAbsence from '../models/known-absence.model';
-import Student from '../models/student.model';
-import User from '../models/user.model';
+import { KnownAbsence, Student, User } from '../models';
 import genericController, { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';

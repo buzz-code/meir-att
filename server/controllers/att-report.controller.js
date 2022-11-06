@@ -1,9 +1,4 @@
-import AttReport from '../models/att-report.model';
-import Lesson from '../models/lesson.model';
-import Student from '../models/student.model';
-import Teacher from '../models/teacher.model';
-import Klass from '../models/klass.model';
-import User from '../models/user.model';
+import { AttReport, Lesson, Student, Teacher, Klass, User } from '../models';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';

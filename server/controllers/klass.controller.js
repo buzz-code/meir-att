@@ -1,6 +1,4 @@
-import Klass from '../models/klass.model';
-import KlassType from '../models/klass-type.model';
-import Teacher from '../models/teacher.model';
+import { Klass, KlassType, Teacher } from '../models';
 import genericController, { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
 

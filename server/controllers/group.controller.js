@@ -1,8 +1,5 @@
 import HttpStatus from 'http-status-codes';
-import Group from '../models/group.model';
-import Klass from '../models/klass.model';
-import Teacher from '../models/teacher.model';
-import Lesson from '../models/lesson.model';
+import { Group, Klass, Teacher, Lesson } from '../models';
 import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
 import { getDiaryStream, getDiaryMergedPdfStream } from '../utils/printHelper';

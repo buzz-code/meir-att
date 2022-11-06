@@ -1,8 +1,7 @@
 import { CallBase } from "../../common-modules/server/utils/callBase";
 import format from 'string-format';
 import * as queryHelper from './queryHelper';
-import AttReport from "../models/att-report.model";
-import Grade from "../models/grade.model";
+import { AttReport, Grade } from "../models";
 
 export class YemotCall extends CallBase {
     constructor(params, callId, user) {

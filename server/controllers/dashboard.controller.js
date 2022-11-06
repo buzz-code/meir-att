@@ -1,6 +1,4 @@
-import AttReport from '../models/att-report.model';
-import Student from '../models/student.model';
-import Teacher from '../models/teacher.model';
+import { AttReport, Student, Teacher } from '../models';
 
 /**
  * Get stats

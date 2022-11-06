@@ -1,11 +1,5 @@
 import bookshelf from "../../common-modules/server/config/bookshelf";
-import AttReport from "../models/att-report.model";
-import Klass from "../models/klass.model";
-import Lesson from "../models/lesson.model";
-import StudentKlass from "../models/student-klass.model";
-import Group from "../models/group.model";
-import Student from "../models/student.model";
-import Teacher from "../models/teacher.model";
+import { AttReport, Klass, Lesson, StudentKlass, Group, Student, Teacher } from "../models";
 
 const getColumns = (model) => {
     const tableName = new model().tableName;
