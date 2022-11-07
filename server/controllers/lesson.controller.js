@@ -1,8 +1,5 @@
 import { Lesson, Teacher, Klass } from '../models';
-import genericController from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
-
-export const { findAll, findById, store, update, destroy, uploadMultiple } = genericController(Lesson);
 
 /**
  * Get edit data

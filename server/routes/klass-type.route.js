@@ -1,6 +1,5 @@
-import * as klassTypeCtrl from '../controllers/klass-type.controller';
-import genericRoute from '../../common-modules/server/routes/generic.route';
+import { genericRouteWithController } from '../../common-modules/server/controllers/loader';
 
-const router = genericRoute(klassTypeCtrl);
+const router = genericRouteWithController('klass-type', 'KlassType');
 
 export default router;

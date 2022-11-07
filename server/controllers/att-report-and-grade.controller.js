@@ -1,9 +1,7 @@
 import { AttReportAndGrade, Lesson, Student, Teacher, Klass, User } from '../models';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
-import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
+import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
-
-export const { findById, store, update, destroy, uploadMultiple } = genericController(AttReportAndGrade);
 
 /**
  * Find all the items

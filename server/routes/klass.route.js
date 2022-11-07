@@ -1,7 +1,6 @@
-import * as klassCtrl from '../controllers/klass.controller';
-import genericRoute from '../../common-modules/server/routes/generic.route';
+import { genericRouteWithController } from '../../common-modules/server/controllers/loader';
 
-const router = genericRoute(klassCtrl, (router, ctrl) => {
+const router = genericRouteWithController('klass', 'Klass', (router, ctrl) => {
     router.route('/get-edit-data')
         .get((req, res) => {
             ctrl.getEditData(req, res);

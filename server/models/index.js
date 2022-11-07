@@ -1,11 +1,5 @@
-import bookshelf from "../../common-modules/server/config/bookshelf";
+import { createModel } from "../../common-modules/server/utils/models";
 
-function createModel(table, properties = {}) {
-    return bookshelf.model(table, {
-        tableName: table,
-        ...properties
-    })
-}
 export const User = createModel('users', {
     verifyPassword(password) {
         return this.get('password') === password;

@@ -1,12 +1,10 @@
 import HttpStatus from 'http-status-codes';
 import format from 'string-format';
 import { Teacher } from '../models';
-import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
+import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { sendEmail } from '../../common-modules/server/utils/mailer';
 import { getEmailFields } from '../utils/queryHelper';
 import bookshelf from '../../common-modules/server/config/bookshelf';
-
-export const { findAll, findById, store, update, destroy, uploadMultiple } = genericController(Teacher);
 
 function getDatesFromFilters(filters) {
     const dates = {

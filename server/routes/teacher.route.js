@@ -1,8 +1,7 @@
-import * as teacherCtrl from '../controllers/teacher.controller';
-import genericRoute from '../../common-modules/server/routes/generic.route';
 import { exportPdf } from '../../common-modules/server/utils/template';
+import { genericRouteWithController } from '../../common-modules/server/controllers/loader';
 
-const router = genericRoute(teacherCtrl, (router, ctrl) => {
+const router = genericRouteWithController('teacher', 'Teacher', (router, ctrl) => {
     router.route('/teachers-with-report-status')
         .get((req, res) => {
             ctrl.teachersWithReportStatus(req, res);

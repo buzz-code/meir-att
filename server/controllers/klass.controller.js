@@ -1,8 +1,6 @@
 import { Klass, KlassType, Teacher } from '../models';
-import genericController, { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
+import { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
-
-export const { findById, store, update, destroy, uploadMultiple } = genericController(Klass);
 
 /**
  * Find all the items

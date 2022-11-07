@@ -1,11 +1,9 @@
 import HttpStatus from 'http-status-codes';
 import { Group, Klass, Teacher, Lesson } from '../models';
-import genericController, { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
+import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
 import { getDiaryStream, getDiaryMergedPdfStream } from '../utils/printHelper';
 import { downloadFileFromStream } from '../../common-modules/server/utils/template';
-
-export const { findById, store, update, destroy, uploadMultiple } = genericController(Group);
 
 function getFindAllQuery(user_id, filters) {
     const dbQuery = new Group()

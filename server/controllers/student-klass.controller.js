@@ -1,9 +1,7 @@
 import { StudentKlass, Student, Klass } from '../models';
-import genericController, { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
+import { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
 import bookshelf from '../../common-modules/server/config/bookshelf';
-
-export const { findById, store, update, destroy, uploadMultiple } = genericController(StudentKlass);
 
 /**
  * Find all the items

@@ -1,6 +1,5 @@
-import * as textCtrl from '../controllers/text.controller';
-import genericRoute from '../../common-modules/server/routes/generic.route';
+import { genericRouteWithController } from '../../common-modules/server/controllers/loader';
 
-const router = genericRoute(textCtrl);
+const router = genericRouteWithController('text', 'Text');
 
 export default router;

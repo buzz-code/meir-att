@@ -1,9 +1,7 @@
 import { KnownAbsence, Student, User } from '../models';
-import genericController, { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
+import { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
-
-export const { findById, store, update, destroy, uploadMultiple } = genericController(KnownAbsence);
 
 /**
  * Find all the items
