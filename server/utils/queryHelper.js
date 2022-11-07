@@ -53,7 +53,8 @@ export function getStudentsByUserIdAndKlassIds(user_id, klasses) {
     return new StudentKlass().where({ user_id }).where('klass_id', 'in', klasses?.split(','))
         .fetchAll({ withRelated: [{ student: function (query) { query.orderBy('name'); } }] })
         .then(res => res.toJSON())
-        .then(res => res.map(item => item.student));
+        .then(res => res.map(item => item.student))
+        .then(res => res.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
 export async function getDiaryDataByGroupId(group_id) {
