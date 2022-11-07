@@ -103,6 +103,12 @@ export const Lesson = createModel('lessons', {
 export const StudentKlass = createModel('student_klasses', {
     user() {
         return this.belongsTo(User);
+    },
+    student() {
+        return this.belongsTo(Student, 'student_tz', 'tz');
+    },
+    klass() {
+        return this.belongsTo(Teacher, 'teacher_id', 'tz');
     }
 })
 
