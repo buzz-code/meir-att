@@ -9,6 +9,7 @@ export const TEXTS = 'texts';
 export const KLASS_TYPES = 'klass-types';
 export const ATT_REPORTS = 'att-reports';
 export const PIVOT_REPORTS = 'att-reports/get-pivot-data';
+export const PIVOT_BY_SHEET_NAME = 'att-reports/get-pivot-by-sheet-name';
 export const GRADES = 'grades';
 export const ATT_REPORTS_AND_GRADES = 'att-reports-and-grades';
 export const PIVOT_GRADES = 'grades/get-pivot-data';

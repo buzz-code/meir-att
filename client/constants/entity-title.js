@@ -9,6 +9,7 @@ export const TEXTS = 'הודעות';
 export const KLASS_TYPES = 'סוגי כיתות';
 export const ATT_REPORTS = 'נוכחות';
 export const PIVOT_REPORTS = 'PIVOT נוכחות';
+export const PIVOT_BY_SHEET_NAME = 'PIVOT לפי גליון';
 export const GRADES = 'ציונים';
 export const ATT_REPORTS_AND_GRADES = 'נוכחות + ציונים';
 export const PIVOT_GRADES = 'PIVOT ציונים';

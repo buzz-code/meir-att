@@ -11,6 +11,10 @@ const router = genericRouteWithController('att-report', 'AttReport', (router, ct
         .get(async (req, res) => {
             await ctrl.getPivotData(req, res);
         });
+    router.route('/get-pivot-by-sheet-name')
+        .get(async (req, res) => {
+            await ctrl.getPivotBySheetName(req, res);
+        });
     router.route('/report-with-known-absences')
         .get(async (req, res) => {
             await ctrl.reportWithKnownAbsences(req, res);

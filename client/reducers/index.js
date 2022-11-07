@@ -28,6 +28,7 @@ import {
   KNOWN_ABSENCES,
   ATT_REPORTS_WITH_KNOWN_ABSENCES,
   TEACHER_REPORT_STATUS,
+  PIVOT_BY_SHEET_NAME,
 } from '../constants/entity';
 
 const appReducer = (history) =>
@@ -45,6 +46,7 @@ const appReducer = (history) =>
     [TEXTS]: crudReducer(TEXTS),
     [ATT_REPORTS]: crudReducer(ATT_REPORTS),
     [PIVOT_REPORTS]: crudReducer(PIVOT_REPORTS),
+    [PIVOT_BY_SHEET_NAME]: crudReducer(PIVOT_BY_SHEET_NAME),
     [GRADES]: crudReducer(GRADES),
     [ATT_REPORTS_AND_GRADES]: crudReducer(ATT_REPORTS_AND_GRADES),
     [PIVOT_GRADES]: crudReducer(PIVOT_GRADES),

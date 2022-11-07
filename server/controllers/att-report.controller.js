@@ -135,6 +135,74 @@ export async function getPivotData(req, res) {
     })
 }
 
+export async function getPivotBySheetName(req, res) {
+    const studentFilters = [];
+    const reportFilters = [];
+    if (req.query.filters) {
+        const filtersObj = JSON.parse(req.query.filters);
+        for (const filter of Object.values(filtersObj)) {
+            if (filter.field.startsWith('students')) {
+                studentFilters.push(filter);
+            }
+            if (filter.field.startsWith('klasses')) {
+                studentFilters.push(filter);
+                reportFilters.push({ ...filter, field: 'lessons.klasses', operator: 'like' });
+            }
+            if (!filter.field.startsWith('students') && !filter.field.startsWith('klasses')) {
+                reportFilters.push(filter);
+            }
+        }
+    }
+
+    const dbQuery = new Student()
+        .where({ 'students.user_id': req.currentUser.id })
+        .query(qb => {
+            qb.leftJoin('student_klasses', { 'student_klasses.student_tz': 'students.tz', 'student_klasses.user_id': 'students.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
+            qb.distinct('students.tz')
+        });
+
+    applyFilters(dbQuery, JSON.stringify(studentFilters));
+    const countQuery = dbQuery.clone().query()
+        .clearSelect()
+        .countDistinct({ count: ['students.id'] })
+        .then(res => res[0].count);
+    const studentsRes = await fetchPagePromise({ dbQuery, countQuery }, req.query);
+
+    const pivotQuery = new AttReport()
+        .where('att_reports.student_tz', 'in', studentsRes.data.map(item => item.tz))
+        .query(qb => {
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
+            qb.select('att_reports.*')
+            qb.select({
+                teacher_name: 'teachers.name',
+                lesson_name: 'lessons.name',
+            })
+        });
+    applyFilters(pivotQuery, JSON.stringify(reportFilters));
+    const pivotRes = await fetchPagePromise({ dbQuery: pivotQuery }, { page: 0, pageSize: 1000 * req.query.pageSize, /* todo:orderBy */ });
+
+    const pivotData = studentsRes.data;
+    const pivotDict = pivotData.reduce((prev, curr) => ({ ...prev, [curr.tz]: curr }), {});
+    pivotRes.data.forEach(item => {
+        const key = item.lesson_id + '_' + item.sheet_name;
+        if (pivotDict[item.student_tz][key] === undefined) {
+            pivotDict[item.student_tz][key] = 0;
+            pivotDict[item.student_tz][key + '_title'] = item.lesson_name + ' גליון ' + item.sheet_name;
+        }
+        pivotDict[item.student_tz][key] += item.abs_count;
+        pivotDict[item.student_tz].total = (pivotDict[item.student_tz].total || 0) + item.abs_count;
+    })
+
+    res.send({
+        error: null,
+        data: pivotData,
+        page: studentsRes.page,
+        total: studentsRes.total,
+    })
+}
+
 export async function reportWithKnownAbsences(req, res) {
     const dbQuery = new Student()
         .where({ 'students.user_id': req.currentUser.id })
