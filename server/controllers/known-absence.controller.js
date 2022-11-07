@@ -40,7 +40,7 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res) {
     try {
-        const data = await getAndParseExcelEmail(req, res);
+        const { data, sheetName } = await getAndParseExcelEmail(req, res);
         const columns = ['student_tz', '', 'absnce_count', 'absnce_code', 'sender_name', 'reason', 'comment'];
         const body = getDataToSave(data, columns);
         const report_date = new Date().toISOString().substr(0, 10);
