@@ -71,9 +71,14 @@ export async function getPivotData(req, res) {
     if (req.query.filters) {
         const filtersObj = JSON.parse(req.query.filters);
         for (const filter of Object.values(filtersObj)) {
-            if (filter.field.startsWith('students') || filter.field.startsWith('klasses')) {
+            if (filter.field.startsWith('students')) {
                 studentFilters.push(filter);
-            } else {
+            }
+            if (filter.field.startsWith('klasses')) {
+                studentFilters.push(filter);
+                reportFilters.push({ ...filter, field: 'lessons.klasses', operator: 'like' });
+            }
+            if (!filter.field.startsWith('students') && !filter.field.startsWith('klasses')) {
                 reportFilters.push(filter);
             }
         }
