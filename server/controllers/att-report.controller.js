@@ -50,6 +50,7 @@ export async function handleEmail(req, res) {
     try {
         const { data, sheetName } = await getAndParseExcelEmail(req, res);
         // temp
+        console.log('test test check if logs')
         console.log({sheetName})
         console.log(typeof data)
         // temp
