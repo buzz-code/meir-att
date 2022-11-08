@@ -95,7 +95,7 @@ export async function getPivotData(req, res) {
         .query(qb => {
             qb.leftJoin('student_klasses', { 'student_klasses.student_tz': 'students.tz', 'student_klasses.user_id': 'students.user_id' })
             qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
-            qb.distinct('students.tz')
+            qb.distinct('students.tz', 'students.name')
         });
 
     applyFilters(dbQuery, JSON.stringify(studentFilters));
@@ -163,7 +163,7 @@ export async function getPivotBySheetName(req, res) {
         .query(qb => {
             qb.leftJoin('student_klasses', { 'student_klasses.student_tz': 'students.tz', 'student_klasses.user_id': 'students.user_id' })
             qb.leftJoin('klasses', { 'klasses.key': 'student_klasses.klass_id', 'klasses.user_id': 'student_klasses.user_id' })
-            qb.distinct('students.tz')
+            qb.distinct('students.tz', 'students.name')
         });
 
     applyFilters(dbQuery, JSON.stringify(studentFilters));
