@@ -51,8 +51,8 @@ export async function handleEmail(req, res) {
         const { data, sheetName } = await getAndParseExcelEmail(req, res);
         // temp
         console.log('test test check if logs')
-        console.log({sheetName})
-        console.log(typeof data)
+        console.log('test2 check sheet name ' + sheetName);
+        console.log('test3 check data type ' + JSON.stringify(data));
         // temp
         const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count'/*, 'approved_abs_count'*/];
         const body = getDataToSave(data, columns);
