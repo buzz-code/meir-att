@@ -26,7 +26,7 @@ const router = genericRouteWithController('att-report', 'AttReport', (router, ct
 
     router.route('/handle-email')
         .post(async (req, res) => {
-            ctrl.handleEmail(req, res);
+            ctrl.handleEmail(req, res, ctrl);
         });
 
 }, req => req.path.match('handle-email'));

@@ -8,7 +8,7 @@ const router = genericRouteWithController('known-absence', 'KnownAbsence', (rout
 
     router.route('/handle-email')
         .post(async (req, res) => {
-            ctrl.handleEmail(req, res);
+            ctrl.handleEmail(req, res, ctrl);
         });
 }, req => req.path.match('handle-email'));
 

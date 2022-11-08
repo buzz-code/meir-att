@@ -3,7 +3,6 @@ import { getDataToSave, getListFromTable } from '../../common-modules/server/uti
 import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
 import bookshelf from '../../common-modules/server/config/bookshelf';
-import Bookshelf from 'bookshelf';
 
 /**
  * Find all the items
@@ -46,7 +45,7 @@ export async function getEditData(req, res) {
     });
 }
 
-export async function handleEmail(req, res) {
+export async function handleEmail(req, res, ctrl) {
     try {
         const { data, sheetName } = await getAndParseExcelEmail(req, res);
         // temp
@@ -65,7 +64,7 @@ export async function handleEmail(req, res) {
             where: { id: req.query.userId },
             select: ['email', 'id']
         }).fetch();
-        await uploadMultiple({ body, currentUser });
+        await ctrl.uploadMultiple({ body, currentUser });
         console.log(body.length + ' records were saved successfully');
     } catch (e) {
         console.log(e);

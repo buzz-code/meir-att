@@ -18,7 +18,7 @@ const router = genericRouteWithController('grade', 'Grade', (router, ctrl) => {
 
     router.route('/handle-email')
         .post(async (req, res) => {
-            ctrl.handleEmail(req, res);
+            ctrl.handleEmail(req, res, ctrl);
         });
 
 }, req => req.path.match('handle-email'));

@@ -60,26 +60,6 @@ export async function getEditData(req, res) {
     });
 }
 
-// export async function handleEmail(req, res) {
-//     try {
-//         const data = await getAndParseExcelEmail(req, res);
-//         const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'abs_count', 'approved_abs_count', 'grade'];
-//         const body = getDataToSave(data, columns);
-//         const report_date = new Date().toISOString().substr(0, 10);
-//         body.forEach(item => {
-//             item.report_date = report_date;
-//         });
-//         const currentUser = await User.query({
-//             where: { id: req.query.userId },
-//             select: ['email', 'id']
-//         }).fetch();
-//         await uploadMultiple({ body, currentUser });
-//         console.log(body.length + ' records were saved successfully');
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }
-
 export async function getPivotData(req, res) {
     const studentFilters = [];
     const reportFilters = [];

@@ -44,7 +44,7 @@ export async function getEditData(req, res) {
     });
 }
 
-export async function handleEmail(req, res) {
+export async function handleEmail(req, res, ctrl) {
     try {
         const { data, sheetName } = await getAndParseExcelEmail(req, res);
         const columns = [/*'klass_id',*/ 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'grade'];
@@ -58,7 +58,7 @@ export async function handleEmail(req, res) {
             where: { id: req.query.userId },
             select: ['email', 'id']
         }).fetch();
-        await uploadMultiple({ body, currentUser });
+        await ctrl.uploadMultiple({ body, currentUser });
         console.log(body.length + ' records were saved successfully');
     } catch (e) {
         console.log(e);
