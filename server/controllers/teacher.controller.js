@@ -30,6 +30,7 @@ export function getFindAllQuery(user_id, filters) {
         .where({ 'teachers.user_id': user_id })
         .query(qb => {
             qb.join('lessons', { 'lessons.teacher_id': 'teachers.tz', 'lessons.user_id': 'teachers.user_id' })
+            qb.join('klasses', { 'lessons.klasses': 'klasses.key', 'lessons.user_id': 'klasses.user_id' })
             qb.leftJoin('att_reports', function () {
                 this.on({
                     'att_reports.teacher_id': 'teachers.tz',
@@ -48,11 +49,12 @@ export function getFindAllQuery(user_id, filters) {
         .then(res => res[0].count);
 
     dbQuery.query(qb => {
-        qb.groupBy('teachers.id', 'lessons.id')
+        qb.groupBy('teachers.id', 'lessons.id', 'klasses.id')
         qb.select({
             teacher_name: 'teachers.name',
             teacher_email: 'teachers.email',
             lesson_name: 'lessons.name',
+            klass_name: 'klasses.name',
             is_report_sent: bookshelf.knex.raw('if(count(att_reports.id) > 0, 1, 0)'),
         })
     });

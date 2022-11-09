@@ -8,8 +8,8 @@ import { booleanList } from '../../../common-modules/server/utils/list';
 
 const getColumns = () => [
   { field: 'teacher_name', title: 'מורה' },
-  { field: 'teacher_email', title: 'מייל מורה' },
   { field: 'lesson_name', title: 'שיעורים' },
+  { field: 'klass_name', title: 'כיתה' },
   {
     field: 'is_report_sent',
     title: 'האם נשלח דיווח',
