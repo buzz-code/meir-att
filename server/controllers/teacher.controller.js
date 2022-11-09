@@ -73,7 +73,7 @@ export async function sendEmailToAllTeachers(req, res) {
 
     const teachersToSend = Object.fromEntries(
         data
-            .filter(item => !item.is_report_sent)
+            .filter(item => !item.is_report_sent || message == 3 && item.is_report_sent)
             .filter(item => item.teacher_email)
             .map(item => ([item.teacher_email, {
                 name: item.teacher_name,
@@ -92,7 +92,7 @@ export async function sendEmailToAllTeachers(req, res) {
 
     for (const teacher_email in teachersToSend) {
         const teacherDetails = teachersToSend[teacher_email];
-        const body = format(bodyText, teacherDetails.name, teacherDetails.lesson_name);
+        const body = format(bodyText, teacherDetails.name, teacherDetails.lesson_name, teacherDetails.klass_name);
         await sendEmail(teacher_email, from_email, subjectText, body, undefined, reply_to_email);
     }
 
