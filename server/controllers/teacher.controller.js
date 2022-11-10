@@ -71,17 +71,11 @@ export async function sendEmailToAllTeachers(req, res) {
     const { dbQuery, countQuery } = getFindAllQuery(req.currentUser.id, JSON.stringify(filters));
     const { data } = await fetchPagePromise({ dbQuery, countQuery }, { page: 0, pageSize: 1000 });
 
-    const teachersToSend = Object.fromEntries(
-        data
-            .filter(item => !item.is_report_sent || message == 3 && item.is_report_sent)
-            .filter(item => item.teacher_email)
-            .map(item => ([item.teacher_email, {
-                name: item.teacher_name,
-                lesson_name: item.lesson_name
-            }]))
-    );
+    const teachersToSend = data
+        .filter(item => !item.is_report_sent || message == 3 && item.is_report_sent)
+        .filter(item => item.teacher_email);
 
-    if (Object.keys(teachersToSend).length > 100) {
+    if (teachersToSend > 100) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             error: 'לא ניתן לשלוח יותר מ100 מיילים ביום'
         });
@@ -90,10 +84,9 @@ export async function sendEmailToAllTeachers(req, res) {
     const { subjectText, bodyText } = await getEmailFields(req.currentUser.id, message);
     const { from_email, reply_to_email } = req.currentUser.toJSON();
 
-    for (const teacher_email in teachersToSend) {
-        const teacherDetails = teachersToSend[teacher_email];
-        const body = format(bodyText, teacherDetails.name, teacherDetails.lesson_name, teacherDetails.klass_name);
-        await sendEmail(teacher_email, from_email, subjectText, body, undefined, reply_to_email);
+    for (const teacherDetails of teachersToSend) {
+        const body = format(bodyText, teacherDetails.teacher_name, teacherDetails.lesson_name, teacherDetails.klass_name);
+        await sendEmail(teacherDetails.teacher_email, from_email, subjectText, body, undefined, reply_to_email);
     }
 
     res.json({
