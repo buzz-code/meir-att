@@ -121,6 +121,8 @@ export class YemotCall extends CallBase {
             }
         }
 
+        await this.getSheetName();
+
         await this.send(
             this.read({ type: 'text', text: this.texts.howManyLessons },
                 'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
@@ -192,6 +194,7 @@ export class YemotCall extends CallBase {
                 abs_count: this.params.absCount,
                 approved_abs_count: this.params.approvedAbsCount || '0',
                 comments: '',
+                sheet_name: this.sheetName,
             };
             await new AttReport(attReport).save();
 
@@ -280,5 +283,30 @@ export class YemotCall extends CallBase {
 
             index++;
         }
+    }
+
+    async getSheetName() {
+        const currentMonth = this.getMonthName(new Date().getMonth() + 1);
+
+        await this.send(
+            this.read({ type: 'text', text: format(this.texts.askIsCurrentMonth, currentMonth) },
+                'isCurrentMonth', 'tap', { max: 1, min: 1, block_asterisk: false })
+        );
+
+        if (this.params.isCurrentMonth == 1) {
+            this.sheetName = currentMonth;
+        } else {
+            await this.send(
+                this.read({ type: 'text', text: this.texts.askForCurrentMonth },
+                    'currentMonth', 'tap', { max: 2, min: 1, block_asterisk: false })
+            );
+            this.sheetName = this.getMonthName(Number(this.params.currentMonth));
+        }
+    }
+
+    getMonthName(number) {
+        const date = new Date(2009, number - 1, 1);  // 2009-11-10
+        const month = date.toLocaleString('he', { month: 'long' });
+        return month;
     }
 }
