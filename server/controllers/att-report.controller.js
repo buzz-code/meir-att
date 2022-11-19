@@ -211,18 +211,20 @@ export async function reportWithKnownAbsences(req, res) {
     const dbQuery = new Student()
         .where({ 'students.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('att_reports_with_known_absences', 'students.tz', 'att_reports_with_known_absences.student_tz')
+            qb.leftJoin('att_reports_with_known_absences', {'students.tz': 'att_reports_with_known_absences.student_tz'})
             qb.leftJoin('student_base_klass', { 'student_base_klass.user_id': 'students.user_id', 'student_base_klass.tz': 'students.user_id' })
+            qb.leftJoin('klasses', { 'klasses.user_id': 'students.user_id', 'klasses.key': 'klass_id' })
         });
     applyFilters(dbQuery, req.query.filters);
     const countQuery = dbQuery.clone().query()
-        .countDistinct({ count: ['students.id'] })
+        .countDistinct({ count: ['students.id', bookshelf.knex.raw('coalesce(klass_id, 0)'), bookshelf.knex.raw('coalesce(klasses.name, "")')] })
         .then(res => res[0].count);
     dbQuery.query(qb => {
-        qb.groupBy('students.id')
+        qb.groupBy(['students.id', bookshelf.knex.raw('coalesce(klass_id, 0)'), bookshelf.knex.raw('coalesce(klasses.name, "")')])
         qb.select({
             student_tz: 'students.tz',
             student_name: 'students.name',
+            klass_name: bookshelf.knex.raw('coalesce(klasses.name, "")'),
             student_base_klass: bookshelf.knex.raw('GROUP_CONCAT(student_base_klass.student_base_klass SEPARATOR ", ")'),
             known_absences_1: bookshelf.knex.raw('SUM(if(absnce_code = 1, absnce_count, null))'),
             known_absences_2: bookshelf.knex.raw('SUM(if(absnce_code = 2, absnce_count, null))'),
