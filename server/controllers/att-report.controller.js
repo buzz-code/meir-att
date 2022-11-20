@@ -21,7 +21,7 @@ export async function findAll(req, res) {
             qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
             qb.leftJoin('known_absences', { 'known_absences.lesson_id': 'att_reports.lesson_id', 'known_absences.user_id': 'att_reports.user_id', 'known_absences.student_tz': 'att_reports.student_tz', 'known_absences.report_month': 'att_reports.sheet_name' })
             qb.select('att_reports.*')
-            qb.select('absence_count')
+            qb.select('absnce_count')
         });
     applyFilters(dbQuery, req.query.filters);
     fetchPage({ dbQuery }, req.query, res);
