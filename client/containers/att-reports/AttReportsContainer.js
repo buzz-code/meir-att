@@ -99,6 +99,7 @@ const AttReportsContainer = ({ entity, title }) => {
       dataToSave.report_date instanceof Date
         ? dataToSave.report_date.toISOString().substr(0, 10)
         : dataToSave.report_date.substr(0, 10),
+    absnce_count: undefined,
   });
 
   return (
