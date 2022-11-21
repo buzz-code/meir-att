@@ -37,7 +37,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
   // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
   { field: 'comments', title: 'הערות' },
   { field: 'sheet_name', title: 'חודש דיווח' },
-  { field: 'absnce_count', title: 'חיסורים מאושרים' },
+  { field: 'absnce_count', title: 'חיסורים מאושרים', editable: 'never' },
 ];
 const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },
