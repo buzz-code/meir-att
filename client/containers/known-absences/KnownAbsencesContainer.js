@@ -26,7 +26,7 @@ const getColumns = ({ students, lessons, klasses }) => [
     ...getPropsForAutoComplete('klass_id', lessons, 'key'),
   },
   { field: 'report_month', title: 'חודש דיווח' },
-  // { field: 'report_date', title: 'תאריך', type: 'date' },
+  { field: 'report_date', title: 'תאריך', type: 'date' },
   { field: 'absnce_count', title: 'מספר חיסורים', type: 'numeric' },
   { field: 'absnce_code', title: 'קוד חיסור' },
   { field: 'sender_name', title: 'שם השולחת' },
