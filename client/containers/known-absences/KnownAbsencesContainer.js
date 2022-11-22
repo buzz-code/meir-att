@@ -23,7 +23,7 @@ const getColumns = ({ students, lessons, klasses }) => [
     field: 'klass_id',
     title: 'כיתה',
     columnOrder: 'klasses.name',
-    ...getPropsForAutoComplete('klass_id', lessons, 'key'),
+    ...getPropsForAutoComplete('klass_id', klasses, 'key'),
   },
   { field: 'report_month', title: 'חודש דיווח' },
   { field: 'report_date', title: 'תאריך', type: 'date' },
