@@ -77,6 +77,7 @@ const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
   { field: 'abs_count', label: 'חיסורים', type: 'text', operator: 'like' },
   // { field: 'approved_abs_count', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
+  { field: 'sheet_name', label: 'חודש דיווח', type: 'text', operator: 'like' },
   { field: 'comments', label: 'הערות', type: 'text', operator: 'like' },
 ];
 
