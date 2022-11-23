@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Table from '../../../common-modules/client/components/table/Table';
@@ -37,6 +37,13 @@ const getFilters = ({ teachers, klasses }) => [
     idField: 'tz',
   },
 ];
+const getActions = (handleSendEmailWithFile) => [
+  {
+    icon: 'mail',
+    tooltip: 'שלח מייל עם קובץ נוכחות',
+    onClick: handleSendEmailWithFile,
+  },
+];
 
 const LessonsContainer = ({ entity, title }) => {
   const dispatch = useDispatch();
@@ -44,8 +51,20 @@ const LessonsContainer = ({ entity, title }) => {
     GET: { 'get-edit-data': editData },
   } = useSelector((state) => state[entity]);
 
+  const handleSendEmailWithFile = useCallback(
+    (event, selectedRows) => {
+      return dispatch(
+        crudAction.customHttpRequest(entity, 'POST', 'send-email-with-file', {
+          ids: selectedRows.map((item) => item.id),
+        })
+      );
+    },
+    [entity]
+  );
+
   const columns = useMemo(() => getColumns(editData || {}), [editData]);
   const filters = useMemo(() => getFilters(editData || {}), [editData]);
+  const actions = useMemo(() => getActions(handleSendEmailWithFile), [handleSendEmailWithFile]);
 
   useEffect(() => {
     dispatch(crudAction.customHttpRequest(entity, 'GET', 'get-edit-data'));
@@ -73,6 +92,7 @@ const LessonsContainer = ({ entity, title }) => {
       title={title}
       columns={columns}
       filters={filters}
+      additionalActions={actions}
       manipulateDataToSave={manipulateDataToSave}
       isBulkDelete={true}
     />

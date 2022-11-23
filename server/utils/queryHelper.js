@@ -74,3 +74,32 @@ export async function getEmailFields(user_id, message) {
 
     return { subjectText, bodyText };
 }
+
+export async function getEmailFieldsWithFile(user_id) {
+    const [subjectText, bodyText] = await Promise.all([
+        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailSubjectFile'),
+        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailBodyFile'),
+    ]);
+
+    return { subjectText, bodyText };
+}
+
+export async function getTemplateDataByLessonId(lesson_id) {
+    const lesson = await new Lesson().where({ id: lesson_id })
+        .fetch({ withRelated: ['teacher'] })
+        .then(res => res.toJSON());
+    const students = await getStudentsByUserIdAndKlassIds(lesson.user_id, lesson.klasses);
+
+    return {
+        lesson,
+        rows: students
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map(student => ({
+                klass_id: lesson.klasses,
+                student_id: student.tz,
+                student_name: student.name,
+                teacher_id: lesson.teacher_id,
+                lesson_id: lesson.key,
+            })),
+    };
+}

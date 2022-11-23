@@ -5,6 +5,11 @@ const router = genericRouteWithController('lesson', 'Lesson', (router, ctrl) => 
         .get((req, res) => {
             ctrl.getEditData(req, res);
         });
+
+    router.route('/send-email-with-file')
+        .post(async (req, res) => {
+            await ctrl.sendEmailWithFile(req, res);
+        });
 });
 
 export default router;

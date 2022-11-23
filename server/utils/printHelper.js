@@ -11,7 +11,7 @@ import constant from '../../common-modules/server/config/directory';
 
 temp.track();
 
-const templatesDir = path.join(__dirname, '..', '..', 'public', 'templates');
+export const templatesDir = path.join(__dirname, '..', '..', 'public', 'templates');
 
 const getFilenameFromGroup = ({ klass, teacher, lesson }) => `יומן נוכחות ${klass?.name || ''}_${teacher?.name || ''}_${lesson?.name || ''}`;
 

@@ -91,6 +91,9 @@ export const KnownAbsence = createModel('known_absences', {
 export const Lesson = createModel('lessons', {
     user() {
         return this.belongsTo(User);
+    },
+    teacher() {
+        return this.belongsTo(Teacher, 'teacher_id', 'tz');
     }
 })
 
