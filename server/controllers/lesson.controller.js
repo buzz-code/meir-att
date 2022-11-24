@@ -38,11 +38,11 @@ export async function sendEmailWithFile(req, res) {
     for (const id of ids) {
         const { fileBuffer, filename, templateData } = await getAttExcelBufferByLessonId(id);
         const attachment = {
-            content: fileBuffer.toString(),
+            content: fileBuffer.toString('base64'),
             filename,
         };
         const body = Format(bodyText, templateData.lesson.teacher.name, templateData.lesson.name);
-        await sendEmail(templateData.lesson.teacher.name, from_email, subjectText, body, undefined, reply_to_email, [attachment]);
+        await sendEmail(templateData.lesson.teacher.email, from_email, subjectText, body, undefined, reply_to_email, [attachment]);
     }
 
     res.json({
