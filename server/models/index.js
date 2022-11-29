@@ -36,6 +36,7 @@ export const AttReport = createModel('att_reports', {
     }
 })
 
+export const AttReportWithKnownAbsences = createModel('att_reports_with_known_absences')
 
 export const Grade = createModel('grades', {
     user() {

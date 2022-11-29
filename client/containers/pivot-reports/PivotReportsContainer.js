@@ -17,6 +17,7 @@ const getColumns = ({ students }, data) => [
   },
   ...getColumnsForPivot(data),
   { field: 'total', title: 'סה"כ', sorting: false },
+  { field: 'total_approved', title: 'מאושרים', sorting: false },
 ];
 const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'students.tz', label: 'תז תלמידה', type: 'text', operator: 'like' },

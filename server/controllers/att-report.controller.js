@@ -1,4 +1,4 @@
-import { AttReport, Lesson, Student, Teacher, Klass, User } from '../models';
+import { AttReport, Lesson, Student, Teacher, Klass, User, AttReportWithKnownAbsences } from '../models';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
@@ -84,7 +84,7 @@ export async function getPivotData(req, res) {
             }
             if (filter.field.startsWith('klasses')) {
                 studentFilters.push(filter);
-                reportFilters.push({ ...filter, field: 'lessons.klasses', operator: 'like' });
+                reportFilters.push({ ...filter, field: 'klass_id', operator: 'like' });
             }
             if (!filter.field.startsWith('students') && !filter.field.startsWith('klasses')) {
                 reportFilters.push(filter);
@@ -107,12 +107,12 @@ export async function getPivotData(req, res) {
         .then(res => res[0].count);
     const studentsRes = await fetchPagePromise({ dbQuery, countQuery }, req.query);
 
-    const pivotQuery = new AttReport()
-        .where('att_reports.student_tz', 'in', studentsRes.data.map(item => item.tz))
+    const pivotQuery = new AttReportWithKnownAbsences()
+        .where('att_reports_with_known_absences.student_tz', 'in', studentsRes.data.map(item => item.tz))
         .query(qb => {
-            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
-            qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
-            qb.select('att_reports.*')
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_with_known_absences.teacher_id', 'teachers.user_id': 'att_reports_with_known_absences.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports_with_known_absences.lesson_id', 'lessons.user_id': 'att_reports_with_known_absences.user_id' })
+            qb.select('att_reports_with_known_absences.*')
             qb.select({
                 teacher_name: 'teachers.name',
                 lesson_name: 'lessons.name',
@@ -124,13 +124,17 @@ export async function getPivotData(req, res) {
     const pivotData = studentsRes.data;
     const pivotDict = pivotData.reduce((prev, curr) => ({ ...prev, [curr.tz]: curr }), {});
     pivotRes.data.forEach(item => {
-        const key = item.lesson_id + '_' + item.teacher_id;
-        if (pivotDict[item.student_tz][key] === undefined) {
-            pivotDict[item.student_tz][key] = 0;
-            pivotDict[item.student_tz][key + '_title'] = item.lesson_name + ' המו\' ' + item.teacher_name;
+        if (item.lesson_id) {
+            const key = item.lesson_id + '_' + item.teacher_id;
+            if (pivotDict[item.student_tz][key] === undefined) {
+                pivotDict[item.student_tz][key] = 0;
+                pivotDict[item.student_tz][key + '_title'] = item.lesson_name + ' המו\' ' + item.teacher_name;
+            }
+
+            pivotDict[item.student_tz][key] += item.abs_count;
         }
-        pivotDict[item.student_tz][key] += item.abs_count;
         pivotDict[item.student_tz].total = (pivotDict[item.student_tz].total || 0) + item.abs_count;
+        pivotDict[item.student_tz].total_approved = (pivotDict[item.student_tz].total_approved || 0) + item.absnce_count;
     })
 
     res.send({
@@ -213,7 +217,7 @@ export async function reportWithKnownAbsences(req, res) {
     const dbQuery = new Student()
         .where({ 'students.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('att_reports_with_known_absences', {'students.tz': 'att_reports_with_known_absences.student_tz'})
+            qb.leftJoin('att_reports_with_known_absences', { 'students.tz': 'att_reports_with_known_absences.student_tz' })
             qb.leftJoin('student_base_klass', { 'student_base_klass.user_id': 'students.user_id', 'student_base_klass.tz': 'students.user_id' })
             qb.leftJoin('klasses', { 'klasses.user_id': 'students.user_id', 'klasses.key': 'klass_id' })
         });
