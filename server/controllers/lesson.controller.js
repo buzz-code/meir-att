@@ -36,7 +36,7 @@ export async function sendEmailWithFile(req, res) {
     const { from_email, reply_to_email } = req.currentUser.toJSON();
 
     for (const id of ids) {
-        const { fileBuffer, filename, templateData } = await getAttExcelBufferByLessonId(id);
+        const { fileBuffer, filename, templateData } = await getAttExcelBufferByLessonId(id, req.currentUser.id);
         const attachment = {
             content: fileBuffer.toString('base64'),
             filename,
