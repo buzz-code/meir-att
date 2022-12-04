@@ -24,3 +24,7 @@ a:hover {
 .m-b-15 {
     margin-bottom: 15px
 }
+
+* {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
