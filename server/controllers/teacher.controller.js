@@ -75,7 +75,7 @@ export async function sendEmailToAllTeachers(req, res) {
         .filter(item => !item.is_report_sent || message == 3 && item.is_report_sent)
         .filter(item => item.teacher_email);
 
-    if (teachersToSend > 100) {
+    if (teachersToSend.length > 100) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             error: 'לא ניתן לשלוח יותר מ100 מיילים ביום'
         });
