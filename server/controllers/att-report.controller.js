@@ -237,3 +237,16 @@ export async function reportWithKnownAbsences(req, res) {
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
 }
+
+export async function getTeacherSalaryReport(req, res) {
+    const dbQuery = new AttReport()
+        .where({ 'att_reports.user_id': req.currentUser.id })
+        .query(qb => {
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'att_reports.klass_id', 'klasses.user_id': 'att_reports.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
+            qb.distinct('att_reports.teacher_id', 'teachers.name', 'lesson_id', 'lessons.name', 'klass_id', 'klasses.name', 'how_many_lessons', 'sheet_name')
+        });
+    applyFilters(dbQuery, req.query.filters);
+    fetchPage({ dbQuery }, req.query, res);
+}

@@ -41,6 +41,7 @@ import ExcelImport from '../containers/excel-import/ExcelImportContainer';
 import KnownAbsences from '../containers/known-absences/KnownAbsencesContainer';
 import AttReportsWithKnownAbsences from '../containers/att-reports-with-known-absences/AttReportsWithKnownAbsencesContainer';
 import TeacherReportStatus from '../containers/teacher-report-status/TeacherReportStatusContainer';
+import TeacherSalaryReport from '../containers/teacher-salary-report/TeacherSalaryReportContainer';
 
 export default [
   [
@@ -213,6 +214,16 @@ export default [
           icon: AssignmentTurnedInIcon,
           title: titles.PIVOT_GRADES,
           props: { entity: entities.PIVOT_GRADES, title: titles.PIVOT_GRADES },
+        },
+        {
+          path: '/teacher-salary-report',
+          component: TeacherSalaryReport,
+          icon: AssignmentTurnedInIcon,
+          title: titles.TEACHER_SALARY_REPORT,
+          props: {
+            entity: entities.TEACHER_SALARY_REPORT,
+            title: titles.TEACHER_SALARY_REPORT,
+          },
         },
         // {
         //   path: '/report-edit',
