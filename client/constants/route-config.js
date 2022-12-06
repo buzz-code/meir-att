@@ -42,6 +42,7 @@ import KnownAbsences from '../containers/known-absences/KnownAbsencesContainer';
 import AttReportsWithKnownAbsences from '../containers/att-reports-with-known-absences/AttReportsWithKnownAbsencesContainer';
 import TeacherReportStatus from '../containers/teacher-report-status/TeacherReportStatusContainer';
 import TeacherSalaryReport from '../containers/teacher-salary-report/TeacherSalaryReportContainer';
+import StudentPercentReport from '../containers/student-percent-report/StudentPercentReportContainer';
 
 export default [
   [
@@ -223,6 +224,16 @@ export default [
           props: {
             entity: entities.TEACHER_SALARY_REPORT,
             title: titles.TEACHER_SALARY_REPORT,
+          },
+        },
+        {
+          path: '/student-percent-report',
+          component: StudentPercentReport,
+          icon: AssignmentTurnedInIcon,
+          title: titles.STUDENT_PERCENTS_REPORT,
+          props: {
+            entity: entities.STUDENT_PERCENTS_REPORT,
+            title: titles.STUDENT_PERCENTS_REPORT,
           },
         },
         // {

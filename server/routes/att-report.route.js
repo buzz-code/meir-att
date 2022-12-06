@@ -23,6 +23,10 @@ const router = genericRouteWithController('att-report', 'AttReport', (router, ct
         .get(async (req, res) => {
             await ctrl.getTeacherSalaryReport(req, res);
         });
+    router.route('/student-percent-report')
+        .get(async (req, res) => {
+            await ctrl.getStudentPercentsReport(req, res);
+        });
     router.route('/:reportId/export-pdf')
         .post((req, res) => {
             exportPdf(req, res);

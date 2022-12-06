@@ -14,6 +14,7 @@ export const GRADES = 'ציונים';
 export const ATT_REPORTS_AND_GRADES = 'נוכחות + ציונים';
 export const PIVOT_GRADES = 'PIVOT ציונים';
 export const TEACHER_SALARY_REPORT = 'דוח שכר למורה';
+export const STUDENT_PERCENTS_REPORT = 'דוח אחוזים לתלמידה';
 export const STUDENT_KLASSES_KLASS_TYPE = 'דוח שיוך תלמידה';
 export const REPORT_EDIT = 'עריכת דיווחים';
 export const STUDENT_REPORTS = 'דו"ח לתלמידה';

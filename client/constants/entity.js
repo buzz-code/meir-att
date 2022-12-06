@@ -11,6 +11,7 @@ export const ATT_REPORTS = 'att-reports';
 export const PIVOT_REPORTS = 'att-reports/get-pivot-data';
 export const PIVOT_BY_SHEET_NAME = 'att-reports/get-pivot-by-sheet-name';
 export const TEACHER_SALARY_REPORT = 'att-reports/teacher-salary-report';
+export const STUDENT_PERCENTS_REPORT = 'att-reports/student-percent-report';
 export const GRADES = 'grades';
 export const ATT_REPORTS_AND_GRADES = 'att-reports-and-grades';
 export const PIVOT_GRADES = 'grades/get-pivot-data';
