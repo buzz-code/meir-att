@@ -1,9 +1,10 @@
 import Format from 'string-format';
 import { Lesson, Teacher, Klass } from '../models';
 import { getListFromTable } from '../../common-modules/server/utils/common';
-import { getAttExcelBufferByLessonId } from '../utils/excelHelper';
+import { getAttExcelBufferByLessonId, getAttExcelBufferByLessonIdAsStream } from '../utils/excelHelper';
 import { sendEmail } from '../../common-modules/server/utils/mailer';
 import { getEmailFieldsWithFile } from '../utils/queryHelper';
+import { downloadFileFromStream } from '../../common-modules/server/utils/template';
 
 /**
  * Get edit data
@@ -49,4 +50,10 @@ export async function sendEmailWithFile(req, res) {
         error: null,
         data: { message: 'המיילים נשלחו בהצלחה' }
     })
+}
+
+export async function downloadOneExcelFile(req, res) {
+    const { body: { id } } = req;
+    const { fileStream, filename } = await getAttExcelBufferByLessonIdAsStream(id, req.currentUser.id);
+    downloadFileFromStream(fileStream, filename, 'xlsx', res);
 }

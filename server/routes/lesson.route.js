@@ -10,6 +10,11 @@ const router = genericRouteWithController('lesson', 'Lesson', (router, ctrl) => 
         .post(async (req, res) => {
             await ctrl.sendEmailWithFile(req, res);
         });
+
+    router.route('/download-one-excel')
+        .post(async (req, res) => {
+            await ctrl.downloadOneExcelFile(req, res);
+        });
 });
 
 export default router;

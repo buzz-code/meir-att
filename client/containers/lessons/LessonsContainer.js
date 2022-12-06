@@ -37,11 +37,17 @@ const getFilters = ({ teachers, klasses }) => [
     idField: 'tz',
   },
 ];
-const getActions = (handleSendEmailWithFile) => [
+const getActions = (handleSendEmailWithFile, handleDownloadOneFile) => [
   {
     icon: 'mail',
     tooltip: 'שלח מייל עם קובץ נוכחות',
     onClick: handleSendEmailWithFile,
+  },
+  {
+    icon: 'download',
+    tooltip: 'הורד קובץ',
+    onClick: handleDownloadOneFile,
+    position: 'row',
   },
 ];
 
@@ -61,10 +67,22 @@ const LessonsContainer = ({ entity, title }) => {
     },
     [entity]
   );
-
+  const handleDownloadOneFile = useCallback(
+    (e, rowData) => {
+      dispatch(
+        crudAction.download(entity, 'POST', 'download-one-excel', {
+          id: rowData.id,
+        })
+      );
+    },
+    [entity]
+  );
   const columns = useMemo(() => getColumns(editData || {}), [editData]);
   const filters = useMemo(() => getFilters(editData || {}), [editData]);
-  const actions = useMemo(() => getActions(handleSendEmailWithFile), [handleSendEmailWithFile]);
+  const actions = useMemo(() => getActions(handleSendEmailWithFile, handleDownloadOneFile), [
+    handleSendEmailWithFile,
+    handleDownloadOneFile,
+  ]);
 
   useEffect(() => {
     dispatch(crudAction.customHttpRequest(entity, 'GET', 'get-edit-data'));
