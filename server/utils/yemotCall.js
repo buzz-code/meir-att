@@ -18,12 +18,12 @@ export class YemotCall extends CallBase {
                     this.hangup()
                 );
             }
-            // const klass = await this.getKlass(teacher);
+            const klass = await this.getKlass(teacher);
             const lesson = await this.getLesson(teacher);
             this.params.baseReport = {
                 user_id: this.user.id,
                 teacher_id: teacher.tz,
-                // klass_id: klass.key,
+                klass_id: klass.key,
                 lesson_id: lesson.key,
                 report_date: new Date().toISOString().substr(0, 10),
             };
