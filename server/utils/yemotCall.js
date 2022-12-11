@@ -18,8 +18,8 @@ export class YemotCall extends CallBase {
                     this.hangup()
                 );
             }
-            const klass = await this.getKlass(teacher);
             const lesson = await this.getLesson(teacher);
+            const klass = await this.getKlass(lesson);
             this.params.baseReport = {
                 user_id: this.user.id,
                 teacher_id: teacher.tz,
@@ -63,12 +63,21 @@ export class YemotCall extends CallBase {
         }
     }
 
-    async getKlass(teacher, isRetry = false) {
-        const message = isRetry ? this.texts.tryAgain : format(this.texts.welcomeAndTypeKlassId, teacher.name);
-        await this.send(
-            this.read({ type: 'text', text: message },
-                'klassId', 'tap', { max: 9, min: 1, block_asterisk: true })
-        );
+    async getKlass(lesson, isRetry = false) {
+        if (!lesson?.klasses || lesson.klasses.includes(',')) {
+            let message = '';
+            if (!isRetry) {
+                message = this.texts.welcomeAndTypeKlassId;
+            } else {
+                message = this.texts.tryAgain;
+            }
+            await this.send(
+                this.read({ type: 'text', text: message },
+                    'klassId', 'tap', { max: 9, min: 1, block_asterisk: true })
+            );
+        } else {
+            this.params.klassId = lesson.klasses;
+        }
         let klass = await queryHelper.getKlassByUserIdAndKlassId(this.user.id, this.params.klassId);
         if (klass) {
             await this.send(
@@ -76,11 +85,11 @@ export class YemotCall extends CallBase {
                     'klassConfirm', 'tap', { max: 1, min: 1, block_asterisk: true })
             );
             if (this.params.klassConfirm === '2') {
-                return this.getKlass(teacher, true);
+                return this.getKlass(null, true);
             }
         } else {
             await this.send(this.id_list_message({ type: 'text', text: this.texts.klassIdNotFound }));
-            return this.getKlass(teacher, true);
+            return this.getKlass(null, true);
         }
         return klass;
     }
