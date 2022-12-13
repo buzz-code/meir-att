@@ -104,6 +104,7 @@ const GradesContainer = ({ entity, title }) => {
       columns={columns}
       filters={filters}
       manipulateDataToSave={manipulateDataToSave}
+      isBulkDelete={true}
     />
   );
 };
