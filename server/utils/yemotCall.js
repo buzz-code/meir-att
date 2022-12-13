@@ -121,10 +121,7 @@ export class YemotCall extends CallBase {
 
         await this.getSheetName();
 
-        await this.send(
-            this.read({ type: 'text', text: this.texts.howManyLessons },
-                'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
-        );
+        await this.getHowManyLessons();
 
         const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, lesson.klasses);
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
@@ -203,10 +200,9 @@ export class YemotCall extends CallBase {
     async getStudentGrades(lesson) {
         const { idsToSkip, existingReports } = await this.askExistingReports('grades')
 
-        await this.send(
-            this.read({ type: 'text', text: this.texts.howManyLessons },
-                'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
-        );
+        await this.getSheetName();
+
+        await this.getHowManyLessons();
 
         const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, lesson.klasses);
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
@@ -318,5 +314,12 @@ export class YemotCall extends CallBase {
         const date = new Date(2009, number - 1, 1);  // 2009-11-10
         const month = date.toLocaleString('he', { month: 'long' });
         return month;
+    }
+
+    async getHowManyLessons() {
+        await this.send(
+            this.read({ type: 'text', text: this.texts.howManyLessons },
+                'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
+        );
     }
 }
