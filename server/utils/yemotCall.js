@@ -124,14 +124,7 @@ export class YemotCall extends CallBase {
         await this.getHowManyLessons();
 
         await this.askForStudentData(idsToSkip, existingReports, async (student, isFirstTime, handleAsterisk, existing) => {
-            await this.send(
-                isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
-                this.read({ type: 'text', text: student.name + ': ' + this.texts.typeAbsences },
-                    'absCount', 'tap', { max: 1, min: 1, block_asterisk: false })
-            );
-            if (await handleAsterisk('absCount')) {
-                throw new Error('abort saving current student');
-            }
+            await this.getAndValidateStudentAbs(student, handleAsterisk, isFirstTime);
 
             if (existing.length > 0) {
                 await new AttReport({ id: existing[0].id }).destroy();
@@ -158,14 +151,7 @@ export class YemotCall extends CallBase {
         await this.getHowManyLessons();
 
         await this.askForStudentData(idsToSkip, existingReports, async (student, isFirstTime, handleAsterisk, existing) => {
-            await this.send(
-                isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
-                this.read({ type: 'text', text: student.name + ': ' + this.texts.typeGrade },
-                    'grade', 'tap', { max: 3, min: 1, block_asterisk: false, sec_wait: 3 })
-            );
-            if (await handleAsterisk('grade')) {
-                throw new Error('abort saving current student');
-            }
+            await this.getAndValidateStudentGrade(student, handleAsterisk, isFirstTime);
 
             if (existing.length > 0) {
                 await new Grade({ id: existing[0].id }).destroy();
@@ -278,6 +264,36 @@ export class YemotCall extends CallBase {
             } finally {
                 isFirstTime = false;
             }
+        }
+    }
+
+    async getAndValidateStudentAbs(student, handleAsterisk, isFirstTime, isRetry = false) {
+        await this.send(
+            isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
+            isRetry ? this.id_list_message({ type: 'text', text: this.texts.tryAgain }) : undefined,
+            this.read({ type: 'text', text: student.name + ': ' + this.texts.typeAbsences },
+                'absCount', 'tap', { max: 1, min: 1, block_asterisk: false })
+        );
+        if (await handleAsterisk('absCount')) {
+            throw new Error('abort saving current student');
+        }
+        if (this.params.absCount === '0' || this.params.absCount > this.params.howManyLessons) {
+            return this.getAndValidateStudentAbs(student, handleAsterisk, false, true);
+        }
+    }
+
+    async getAndValidateStudentGrade(student, handleAsterisk, isFirstTime, isRetry = false) {
+        await this.send(
+            isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
+            isRetry ? this.id_list_message({ type: 'text', text: this.texts.tryAgain }) : undefined,
+            this.read({ type: 'text', text: student.name + ': ' + this.texts.typeGrade },
+                'grade', 'tap', { max: 4, min: 1, block_asterisk: false, sec_wait: 3 })
+        );
+        if (await handleAsterisk('grade')) {
+            throw new Error('abort saving current student');
+        }
+        if (this.params.grade < 40 || this.params.grade > 100) {
+            return this.getAndValidateStudentAbs(student, handleAsterisk, false, true);
         }
     }
 }
