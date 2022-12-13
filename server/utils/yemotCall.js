@@ -117,18 +117,7 @@ export class YemotCall extends CallBase {
     }
 
     async getStudentReports(lesson) {
-        const existingReports = await queryHelper.getExistingReport(this.user.id, /*klass.key,*/ this.params.baseReport.lesson_id);
-        let idsToSkip = new Set();
-        if (existingReports.length > 0) {
-            await this.send(
-                this.read({ type: 'text', text: this.texts.askIfSkipExistingReports },
-                    'isSkipExistingReports', 'tap', { max: 1, min: 1, block_asterisk: true })
-            );
-
-            if (this.params.isSkipExistingReports == '1') {
-                idsToSkip = new Set(existingReports.map(item => item.student_tz));
-            }
-        }
+        const { idsToSkip, existingReports } = await this.askExistingReports('att');
 
         await this.getSheetName();
 
@@ -212,18 +201,7 @@ export class YemotCall extends CallBase {
     }
 
     async getStudentGrades(lesson) {
-        const existingReports = await queryHelper.getExistingGrades(this.user.id, /*klass.key,*/ this.params.baseReport.lesson_id);
-        let idsToSkip = new Set();
-        if (existingReports.length > 0) {
-            await this.send(
-                this.read({ type: 'text', text: this.texts.askIfSkipExistingReports },
-                    'isSkipExistingReports', 'tap', { max: 1, min: 1, block_asterisk: true })
-            );
-
-            if (this.params.isSkipExistingReports == '1') {
-                idsToSkip = new Set(existingReports.map(item => item.student_tz));
-            }
-        }
+        const { idsToSkip, existingReports } = await this.askExistingReports('grades')
 
         await this.send(
             this.read({ type: 'text', text: this.texts.howManyLessons },
@@ -292,6 +270,29 @@ export class YemotCall extends CallBase {
 
             index++;
         }
+    }
+
+    async askExistingReports(reportType) {
+        let existingReports = [];
+        if (reportType === 'grades') {
+            existingReports = await queryHelper.getExistingGrades(this.user.id, this.params.baseReport.klass_id, this.params.baseReport.lesson_id);
+        } else if (reportType === 'att') {
+            existingReports = await queryHelper.getExistingReport(this.user.id, this.params.baseReport.klass_id, this.params.baseReport.lesson_id);
+        }
+
+        let idsToSkip = new Set();
+        if (existingReports.length > 0) {
+            await this.send(
+                this.read({ type: 'text', text: this.texts.askIfSkipExistingReports },
+                    'isSkipExistingReports', 'tap', { max: 1, min: 1, block_asterisk: true })
+            );
+
+            if (this.params.isSkipExistingReports == '1') {
+                idsToSkip = new Set(existingReports.map(item => item.student_tz));
+            }
+        }
+
+        return { existingReports, idsToSkip };
     }
 
     async getSheetName() {
