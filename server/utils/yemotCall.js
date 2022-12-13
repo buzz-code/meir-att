@@ -123,61 +123,16 @@ export class YemotCall extends CallBase {
 
         await this.getHowManyLessons();
 
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, this.params.baseReport.klass_id);
-        const students = studentList.filter(item => !idsToSkip.has(item.tz));
-
-        let isFirstTime = true;
-        this.params.studentReports = {};
-        let index = 0;
-
-        async function handleAsterisk(field) {
-            if (this.params[field] == '*') {
-                await this.send(
-                    this.read({ type: 'text', text: this.texts.sideMenu },
-                        'sideMenu', 'tap', { max: 1, min: 1, block_asterisk: true })
-                );
-                if (this.params.sideMenu == '4') {
-                    if (index > 0) {
-                        index--;
-                    }
-                    return true;
-                } else if (this.params.sideMenu == '6') {
-                    index++;
-                    return true;
-                } else {
-                    this.params[field] = '0';
-                }
-            }
-            return false;
-        }
-
-        handleAsterisk = handleAsterisk.bind(this);
-
-        while (index < students.length) {
-            const student = students[index];
+        await this.askForStudentData(idsToSkip, existingReports, async (student, isFirstTime, handleAsterisk, existing) => {
             await this.send(
                 isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
                 this.read({ type: 'text', text: student.name + ': ' + this.texts.typeAbsences },
                     'absCount', 'tap', { max: 1, min: 1, block_asterisk: false })
             );
             if (await handleAsterisk('absCount')) {
-                continue;
+                return false;
             }
-            // await this.send(
-            //     this.read({ type: 'text', text: this.texts.typeApprovedAbsences },
-            //         'approvedAbsCount', 'tap', { max: 1, min: 1, block_asterisk: false })
-            // );
-            // if (await handleAsterisk('approvedAbsCount')) {
-            //     continue;
-            // }
 
-            isFirstTime = false;
-            // this.params.studentReports[student.tz] = {
-            //     abs_count: this.params.absCount,
-            //     approved_abs_count: this.params.approvedAbsCount,
-            // };
-
-            const existing = existingReports.filter(item => item.student_tz == student.tz);
             if (existing.length > 0) {
                 await new AttReport({ id: existing[0].id }).destroy();
             }
@@ -193,8 +148,8 @@ export class YemotCall extends CallBase {
             };
             await new AttReport(attReport).save();
 
-            index++;
-        }
+            return true;
+        });
     }
 
     async getStudentGrades() {
@@ -204,53 +159,16 @@ export class YemotCall extends CallBase {
 
         await this.getHowManyLessons();
 
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, this.params.baseReport.klass_id);
-        const students = studentList.filter(item => !idsToSkip.has(item.tz));
-
-        let isFirstTime = true;
-        this.params.studentReports = {};
-        let index = 0;
-
-        async function handleAsterisk(field) {
-            if (this.params[field] == '*') {
-                await this.send(
-                    this.read({ type: 'text', text: this.texts.sideMenu },
-                        'sideMenu', 'tap', { max: 1, min: 1, block_asterisk: true })
-                );
-                if (this.params.sideMenu == '4') {
-                    if (index > 0) {
-                        index--;
-                    }
-                    return true;
-                } else if (this.params.sideMenu == '6') {
-                    index++;
-                    return true;
-                } else {
-                    this.params[field] = '0';
-                }
-            }
-            return false;
-        }
-
-        handleAsterisk = handleAsterisk.bind(this);
-
-        while (index < students.length) {
-            const student = students[index];
+        await this.askForStudentData(idsToSkip, existingReports, async (student, isFirstTime, handleAsterisk, existing) => {
             await this.send(
                 isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
                 this.read({ type: 'text', text: student.name + ': ' + this.texts.typeGrade },
                     'grade', 'tap', { max: 3, min: 1, block_asterisk: false, sec_wait: 3 })
             );
             if (await handleAsterisk('grade')) {
-                continue;
+                return false;
             }
 
-            isFirstTime = false;
-            // this.params.studentReports[student.tz] = {
-            //     grade: this.params.grade,
-            // };
-
-            const existing = existingReports.filter(item => item.student_tz == student.tz);
             if (existing.length > 0) {
                 await new Grade({ id: existing[0].id }).destroy();
             }
@@ -264,8 +182,8 @@ export class YemotCall extends CallBase {
             };
             await new Grade(dataToSave).save();
 
-            index++;
-        }
+            return true;
+        });
     }
 
     async askExistingReports(reportType) {
@@ -321,5 +239,49 @@ export class YemotCall extends CallBase {
             this.read({ type: 'text', text: this.texts.howManyLessons },
                 'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
         );
+    }
+
+    async askForStudentData(idsToSkip, existingReports, callback) {
+        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, this.params.baseReport.klass_id);
+        const students = studentList.filter(item => !idsToSkip.has(item.tz));
+
+        let isFirstTime = true;
+        this.params.studentReports = {};
+        let index = 0;
+
+        async function handleAsterisk(field) {
+            if (this.params[field] == '*') {
+                await this.send(
+                    this.read({ type: 'text', text: this.texts.sideMenu },
+                        'sideMenu', 'tap', { max: 1, min: 1, block_asterisk: true })
+                );
+                if (this.params.sideMenu == '4') {
+                    if (index > 0) {
+                        index--;
+                    }
+                    return true;
+                } else if (this.params.sideMenu == '6') {
+                    index++;
+                    return true;
+                } else {
+                    this.params[field] = '0';
+                }
+            }
+            return false;
+        }
+
+        handleAsterisk = handleAsterisk.bind(this);
+
+        while (index < students.length) {
+            const student = students[index];
+            const existing = existingReports.filter(item => item.student_tz == student.tz);
+
+            const isDataSaved = await callback(student, isFirstTime, handleAsterisk, existing)
+
+            isFirstTime = false;
+            if (isDataSaved) {
+                index++;
+            }
+        }
     }
 }
