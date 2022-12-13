@@ -163,6 +163,7 @@ export class YemotCall extends CallBase {
                 student_tz: student.tz,
                 grade: this.params.grade,
                 comments: '',
+                sheet_name: this.sheetName,
             };
             await new Grade(dataToSave).save();
         });
