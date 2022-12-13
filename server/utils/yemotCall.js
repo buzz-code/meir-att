@@ -33,10 +33,10 @@ export class YemotCall extends CallBase {
                     'reportType', 'tap', { max: 1, min: 1, block_asterisk: true })
             );
             if (this.params.reportType === '1') {
-                await this.getStudentReports(lesson);
+                await this.getStudentReports();
             }
             else if (this.params.reportType === '2') {
-                await this.getStudentGrades(lesson);
+                await this.getStudentGrades();
             }
             try {
                 // for (const studentId in this.params.studentReports) {
@@ -116,14 +116,14 @@ export class YemotCall extends CallBase {
         return lesson;
     }
 
-    async getStudentReports(lesson) {
+    async getStudentReports() {
         const { idsToSkip, existingReports } = await this.askExistingReports('att');
 
         await this.getSheetName();
 
         await this.getHowManyLessons();
 
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, lesson.klasses);
+        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, this.params.baseReport.klass_id);
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
 
         let isFirstTime = true;
@@ -197,14 +197,14 @@ export class YemotCall extends CallBase {
         }
     }
 
-    async getStudentGrades(lesson) {
+    async getStudentGrades() {
         const { idsToSkip, existingReports } = await this.askExistingReports('grades')
 
         await this.getSheetName();
 
         await this.getHowManyLessons();
 
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, lesson.klasses);
+        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, this.params.baseReport.klass_id);
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
 
         let isFirstTime = true;
