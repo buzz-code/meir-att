@@ -217,11 +217,15 @@ export class YemotCall extends CallBase {
         return month;
     }
 
-    async getHowManyLessons() {
+    async getHowManyLessons(isRetry = false) {
         await this.send(
+            isRetry ? this.id_list_message({ type: 'text', text: this.texts.tryAgain }) : undefined,
             this.read({ type: 'text', text: this.texts.howManyLessons },
                 'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
         );
+        if (this.params.howManyLessons === '0') {
+            return this.getHowManyLessons(true);
+        }
     }
 
     async askForStudentData(idsToSkip, existingReports, callback) {
@@ -278,7 +282,7 @@ export class YemotCall extends CallBase {
         if (await handleAsterisk('absCount')) {
             throw new Error('abort saving current student');
         }
-        if (this.params.absCount === '0' || this.params.absCount > this.params.howManyLessons) {
+        if (this.params.absCount > this.params.howManyLessons) {
             return this.getAndValidateStudentAbs(student, handleAsterisk, false, true);
         }
     }
