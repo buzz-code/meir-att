@@ -130,7 +130,7 @@ export class YemotCall extends CallBase {
                     'absCount', 'tap', { max: 1, min: 1, block_asterisk: false })
             );
             if (await handleAsterisk('absCount')) {
-                return false;
+                throw new Error('abort saving current student');
             }
 
             if (existing.length > 0) {
@@ -147,8 +147,6 @@ export class YemotCall extends CallBase {
                 sheet_name: this.sheetName,
             };
             await new AttReport(attReport).save();
-
-            return true;
         });
     }
 
@@ -166,7 +164,7 @@ export class YemotCall extends CallBase {
                     'grade', 'tap', { max: 3, min: 1, block_asterisk: false, sec_wait: 3 })
             );
             if (await handleAsterisk('grade')) {
-                return false;
+                throw new Error('abort saving current student');
             }
 
             if (existing.length > 0) {
@@ -181,8 +179,6 @@ export class YemotCall extends CallBase {
                 comments: '',
             };
             await new Grade(dataToSave).save();
-
-            return true;
         });
     }
 
@@ -276,11 +272,11 @@ export class YemotCall extends CallBase {
             const student = students[index];
             const existing = existingReports.filter(item => item.student_tz == student.tz);
 
-            const isDataSaved = await callback(student, isFirstTime, handleAsterisk, existing)
-
-            isFirstTime = false;
-            if (isDataSaved) {
+            try {
+                await callback(student, isFirstTime, handleAsterisk, existing)
                 index++;
+            } finally {
+                isFirstTime = false;
             }
         }
     }
