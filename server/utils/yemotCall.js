@@ -148,7 +148,7 @@ export class YemotCall extends CallBase {
 
         await this.getSheetName();
 
-        await this.getHowManyLessons();
+        // await this.getHowManyLessons();
 
         await this.askForStudentData(idsToSkip, existingReports, async (student, isFirstTime, handleAsterisk, existing) => {
             await this.getAndValidateStudentGrade(student, handleAsterisk, isFirstTime);
@@ -229,7 +229,7 @@ export class YemotCall extends CallBase {
     }
 
     async askForStudentData(idsToSkip, existingReports, callback) {
-        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, this.params.baseReport.klass_id);
+        const studentList = await queryHelper.getStudentsByUserIdAndKlassIds(this.user.id, String(this.params.baseReport.klass_id));
         const students = studentList.filter(item => !idsToSkip.has(item.tz));
 
         let isFirstTime = true;
