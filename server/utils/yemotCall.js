@@ -221,7 +221,7 @@ export class YemotCall extends CallBase {
         await this.send(
             isRetry ? this.id_list_message({ type: 'text', text: this.texts.tryAgain }) : undefined,
             this.read({ type: 'text', text: this.texts.howManyLessons },
-                'howManyLessons', 'tap', { max: 2, min: 1, block_asterisk: true, sec_wait: 2 })
+                'howManyLessons', 'tap', { max: 3, min: 1, block_asterisk: true, sec_wait: 2 })
         );
         if (this.params.howManyLessons === '0') {
             return this.getHowManyLessons(true);
@@ -277,7 +277,7 @@ export class YemotCall extends CallBase {
             isFirstTime ? this.id_list_message({ type: 'text', text: this.texts.startStudentList }) : undefined,
             isRetry ? this.id_list_message({ type: 'text', text: this.texts.tryAgain }) : undefined,
             this.read({ type: 'text', text: student.name + ': ' + this.texts.typeAbsences },
-                'absCount', 'tap', { max: 1, min: 1, block_asterisk: false })
+                'absCount', 'tap', { max: 3, min: 1, block_asterisk: false })
         );
         if (await handleAsterisk('absCount')) {
             throw new Error('abort saving current student');
