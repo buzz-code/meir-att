@@ -22,6 +22,7 @@ function getDatesFromFilters(filters) {
         }
         if (conditions?.[4]?.value) {
             dates.sheetName = conditions[4].value;
+            conditions[4].value = null;
         }
     } catch {
     }
