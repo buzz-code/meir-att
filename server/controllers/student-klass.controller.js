@@ -59,9 +59,9 @@ export async function reportByKlassType(req, res) {
         .countDistinct({ count: ['students.id'] })
         .then(res => res[0].count);
     const klassTypes = {
-        1: [24, 21],
-        2: [25, 22],
-        3: [26, 23],
+        1: [24, 21, 31],
+        2: [25, 22, 32],
+        3: [26, 23, 33],
     }
     klassTypes.other = [...klassTypes[1], ...klassTypes[2], ...klassTypes[[3]]]
     dbQuery.query(qb => {
