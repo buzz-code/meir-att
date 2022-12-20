@@ -46,7 +46,7 @@ export function getStudentsByUserIdAndKlassIds(user_id, klasses) {
         .fetchAll({ withRelated: [{ student: function (query) { query.orderBy('name'); } }] })
         .then(res => res.toJSON())
         .then(res => res.map(item => item.student))
-        .then(res => res.sort((a, b) => a.name.localeCompare(b.name)));
+        .then(res => res.sort((a, b) => a.name?.localeCompare(b.name)));
 }
 
 export async function getDiaryDataByGroupId(group_id) {
@@ -55,7 +55,7 @@ export async function getDiaryDataByGroupId(group_id) {
         .then(res => res.toJSON());
     const students = await getStudentsByUserIdAndKlassId(group.user_id, group.klass_id);
 
-    return { group, students: students.sort((a, b) => a.name.localeCompare(b.name)) };
+    return { group, students: students.sort((a, b) => a.name?.localeCompare(b.name)) };
 }
 
 function getTextByUserIdAndName(user_id, name) {
@@ -93,7 +93,7 @@ export async function getTemplateDataByLessonId(lesson_id) {
     return {
         lesson,
         rows: students
-            .sort((a, b) => a.name.localeCompare(b.name))
+            .sort((a, b) => a.name?.localeCompare(b.name))
             .map(student => ({
                 klass_id: lesson.klasses,
                 student_id: student.tz,
