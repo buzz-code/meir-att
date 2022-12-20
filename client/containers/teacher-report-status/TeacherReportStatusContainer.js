@@ -27,6 +27,7 @@ const getFilters = () => [
     operator: 'date-before-placeholder',
   },
   { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after-placeholder' },
+  { field: 'sheet_name', label: 'חודש דיווח', type: 'text', operator: 'like' },
   { field: 'teachers.name', label: 'מורה', type: 'text', operator: 'like' },
   { field: 'lessons.name', label: 'שיעור', type: 'text', operator: 'like' },
 ];

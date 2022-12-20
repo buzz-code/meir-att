@@ -9,7 +9,8 @@ import bookshelf from '../../common-modules/server/config/bookshelf';
 function getDatesFromFilters(filters) {
     const dates = {
         startDate: new Date('2000-01-01'),
-        endDate: new Date('2100-12-31')
+        endDate: new Date('2100-12-31'),
+        sheetName: '',
     };
     try {
         const conditions = JSON.parse(filters);
@@ -19,13 +20,16 @@ function getDatesFromFilters(filters) {
         if (conditions?.[3]?.value) {
             dates.endDate = conditions[3].value;
         }
+        if (conditions?.[4]?.value) {
+            dates.sheetName = conditions[4].value;
+        }
     } catch {
     }
     return dates;
 }
 
 export function getFindAllQuery(user_id, filters) {
-    const { startDate, endDate } = getDatesFromFilters(filters);
+    const { startDate, endDate, sheetName } = getDatesFromFilters(filters);
     const dbQuery = new Teacher()
         .where({ 'teachers.user_id': user_id })
         .query(qb => {
@@ -39,6 +43,7 @@ export function getFindAllQuery(user_id, filters) {
                 })
                     .andOn(bookshelf.knex.raw('report_date >= ?', startDate))
                     .andOn(bookshelf.knex.raw('report_date <= ?', endDate))
+                    .andOn(bookshelf.knex.raw('sheet_name like ?', `%${sheetName}%`))
             })
         });
 
