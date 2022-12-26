@@ -4,8 +4,8 @@ import { renderExcelTemplate } from "../../common-modules/server/utils/template"
 import { templatesDir } from "./printHelper";
 import { getTemplateDataByLessonId } from "./queryHelper";
 
-const getFilenameFromTemplateData = ({ }) => `דוח נוכחות למלא`;
-const getFilenameFromTemplateDataWithExt = ({ }) => `${getFilenameFromTemplateData({})}.xlsx`;
+const getFilenameFromTemplateData = ({ lesson }) => `דוח נוכחות למלא ${lesson?.teacher?.name || ''} ${lesson?.name || ''} ${lesson?.klasses || ''}`;
+const getFilenameFromTemplateDataWithExt = (data) => `${getFilenameFromTemplateData(data)}.xlsx`;
 
 export async function getAttExcelBufferByLessonId(lessonId, userId) {
     const templatePath = path.join(templatesDir, `att_report-${userId}.xlsx`);
