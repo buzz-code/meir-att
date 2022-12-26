@@ -49,13 +49,13 @@ export async function handleEmail(req, res, ctrl) {
         const body = getDataToSave(data, columns);
         const report_date = new Date().toISOString().substr(0, 10);
         body.forEach(item => {
+            item.user_id = req.query.userId;
             item.report_date = report_date;
         });
-        const currentUser = await User.query({
-            where: { id: req.query.userId },
-            select: ['email', 'id']
-        }).fetch();
-        await ctrl.uploadMultiple({ body, currentUser });
+        await bookshelf.transaction(transaction => (
+            KnownAbsence.collection(body)
+                .invokeThen("save", null, { method: "insert", transacting: transaction })
+        ));
         console.log(body.length + ' records were saved successfully');
         res.send({ success: true, message: body.length + ' רשומות נשמרו בהצלחה' });
     } catch (e) {
