@@ -46,7 +46,7 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res, ctrl) {
     try {
-        const responses = await getAndParseExcelEmailV2WithResponse(req, attachment => {
+        const response = await getAndParseExcelEmailV2WithResponse(req, attachment => {
             const { data, sheetName } = attachment;
             const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'grade'];
             const body = getDataToSave(data, columns);
@@ -64,7 +64,7 @@ export async function handleEmail(req, res, ctrl) {
                     .invokeThen("save", null, { method: "insert", transacting: transaction })
             ))
         });
-        res.send({ success: true, message: responses.join('\n') });
+        res.send({ success: true, message: response });
     } catch (e) {
         console.log(e);
         res.status(500).send({ success: false, message: e.message });
