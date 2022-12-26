@@ -1,7 +1,7 @@
 import { Klass, KnownAbsence, Lesson, Student, User } from '../models';
 import { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
-import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
+import { getAndParseExcelEmailV2WithResponse } from '../../common-modules/server/utils/email';
 
 /**
  * Find all the items
@@ -44,23 +44,24 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res, ctrl) {
     try {
-        const { data, sheetName } = await getAndParseExcelEmail(req);
-        const columns = ['student_tz', '', 'lesson_id', 'klass_id', 'report_month', 'absnce_count', 'absnce_code', 'sender_name', 'reason', 'comment'];
-        const body = getDataToSave(data, columns);
-        if (isNaN(Number(body[0].lesson_id))) {
-            body.splice(0, 1);
-        }
-        const report_date = new Date().toISOString().substr(0, 10);
-        body.forEach(item => {
-            item.user_id = req.query.userId;
-            item.report_date = report_date;
+        const responses = await getAndParseExcelEmailV2WithResponse(req, attachment => {
+            const { data, sheetName } = attachment;
+            const columns = ['student_tz', '', 'lesson_id', 'klass_id', 'report_month', 'absnce_count', 'absnce_code', 'sender_name', 'reason', 'comment'];
+            const body = getDataToSave(data, columns);
+            if (isNaN(Number(body[0].lesson_id))) {
+                body.splice(0, 1);
+            }
+            const report_date = new Date().toISOString().substr(0, 10);
+            body.forEach(item => {
+                item.user_id = req.query.userId;
+                item.report_date = report_date;
+            });
+            return bookshelf.transaction(transaction => (
+                KnownAbsence.collection(body)
+                    .invokeThen("save", null, { method: "insert", transacting: transaction })
+            ))
         });
-        await bookshelf.transaction(transaction => (
-            KnownAbsence.collection(body)
-                .invokeThen("save", null, { method: "insert", transacting: transaction })
-        ));
-        console.log(body.length + ' records were saved successfully');
-        res.send({ success: true, message: body.length + ' רשומות נשמרו בהצלחה' });
+        res.send({ success: true, message: responses.join('\n') });
     } catch (e) {
         console.log(e);
         res.status(500).send({ success: false, message: e.message });

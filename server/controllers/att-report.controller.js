@@ -1,7 +1,7 @@
 import { AttReport, Lesson, Student, Teacher, Klass, User, AttReportWithKnownAbsences } from '../models';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
-import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
+import { getAndParseExcelEmailV2WithResponse } from '../../common-modules/server/utils/email';
 import bookshelf from '../../common-modules/server/config/bookshelf';
 
 /**
@@ -49,24 +49,25 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res, ctrl) {
     try {
-        const { data, sheetName } = await getAndParseExcelEmail(req);
-        const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count'/*, 'approved_abs_count'*/];
-        const body = getDataToSave(data, columns);
-        if (isNaN(Number(body[0].lesson_id))) {
-            body.splice(0, 1);
-        }
-        const report_date = new Date().toISOString().substr(0, 10);
-        body.forEach(item => {
-            item.user_id = req.query.userId;
-            item.report_date = report_date;
-            item.sheet_name = sheetName;
+        const responses = await getAndParseExcelEmailV2WithResponse(req, attachment => {
+            const { data, sheetName } = attachment;
+            const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count'/*, 'approved_abs_count'*/];
+            const body = getDataToSave(data, columns);
+            if (isNaN(Number(body[0].lesson_id))) {
+                body.splice(0, 1);
+            }
+            const report_date = new Date().toISOString().substr(0, 10);
+            body.forEach(item => {
+                item.user_id = req.query.userId;
+                item.report_date = report_date;
+                item.sheet_name = sheetName;
+            });
+            return bookshelf.transaction(transaction => (
+                AttReport.collection(body)
+                    .invokeThen("save", null, { method: "insert", transacting: transaction })
+            ))
         });
-        await bookshelf.transaction(transaction => (
-            AttReport.collection(body)
-                .invokeThen("save", null, { method: "insert", transacting: transaction })
-        ));
-        console.log(body.length + ' records were saved successfully');
-        res.send({ success: true, message: body.length + ' רשומות נשמרו בהצלחה' });
+        res.send({ success: true, message: responses.join('\n') });
     } catch (e) {
         console.log(e);
         res.status(500).send({ success: false, message: e.message });
