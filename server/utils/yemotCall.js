@@ -282,7 +282,7 @@ export class YemotCall extends CallBase {
         if (await handleAsterisk('absCount')) {
             throw new Error('abort saving current student');
         }
-        if (this.params.absCount > this.params.howManyLessons) {
+        if (Number(this.params.absCount) > Number(this.params.howManyLessons)) {
             return this.getAndValidateStudentAbs(student, handleAsterisk, false, true);
         }
     }
@@ -297,7 +297,7 @@ export class YemotCall extends CallBase {
         if (await handleAsterisk('grade')) {
             throw new Error('abort saving current student');
         }
-        if (this.params.grade < 40 || this.params.grade > 100) {
+        if (Number(this.params.grade) < 40 || Number(this.params.grade) > 100) {
             return this.getAndValidateStudentAbs(student, handleAsterisk, false, true);
         }
     }
