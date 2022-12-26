@@ -52,6 +52,9 @@ export async function handleEmail(req, res, ctrl) {
         const { data, sheetName } = await getAndParseExcelEmail(req);
         const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count'/*, 'approved_abs_count'*/];
         const body = getDataToSave(data, columns);
+        if (isNaN(Number(body[0].lesson_id))) {
+            body.splice(0, 1);
+        }
         const report_date = new Date().toISOString().substr(0, 10);
         body.forEach(item => {
             item.user_id = req.query.userId;
