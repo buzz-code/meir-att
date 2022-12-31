@@ -2,6 +2,7 @@ import { Klass, KnownAbsence, Lesson, Student, User } from '../models';
 import { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { getAndParseExcelEmailV2WithResponse } from '../../common-modules/server/utils/email';
+import bookshelf from '../../common-modules/server/config/bookshelf';
 
 /**
  * Find all the items
