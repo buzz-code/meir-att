@@ -48,7 +48,7 @@ export async function handleEmail(req, res, ctrl) {
     try {
         const response = await getAndParseExcelEmailV2WithResponse(req, attachment => {
             const { data, sheetName } = attachment;
-            const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'grade'];
+            const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'grade', 'comments'];
             const body = getDataToSave(data, columns);
             if (isNaN(Number(body[0].lesson_id))) {
                 body.splice(0, 1);
