@@ -2,6 +2,7 @@ import { Grade, Lesson, Student, Teacher, Klass, User } from '../models';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmailV2WithResponse } from '../../common-modules/server/utils/email';
+import bookshelf from '../../common-modules/server/config/bookshelf';
 
 /**
  * Find all the items
