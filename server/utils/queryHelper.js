@@ -75,10 +75,10 @@ export async function getEmailFields(user_id, message) {
     return { subjectText, bodyText };
 }
 
-export async function getEmailFieldsWithFile(user_id) {
+export async function getEmailFieldsWithFile(user_id, type) {
     const [subjectText, bodyText] = await Promise.all([
-        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailSubjectFile'),
-        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailBodyFile'),
+        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailSubjectFile' + type),
+        getTextByUserIdAndName(user_id, 'teacherReportStatusEmailBodyFile' + type),
     ]);
 
     return { subjectText, bodyText };

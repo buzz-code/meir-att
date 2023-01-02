@@ -1,7 +1,7 @@
 import Format from 'string-format';
 import { Lesson, Teacher, Klass } from '../models';
 import { getListFromTable } from '../../common-modules/server/utils/common';
-import { getAttExcelBufferByLessonId, getAttExcelBufferByLessonIdAsStream } from '../utils/excelHelper';
+import { getAttExcelBufferByLessonId, getAttExcelBufferByLessonIdAsStream, getGradeExcelBufferByLessonId, getGradeExcelBufferByLessonIdAsStream } from '../utils/excelHelper';
 import { sendEmail } from '../../common-modules/server/utils/mailer';
 import { getEmailFieldsWithFile } from '../utils/queryHelper';
 import { downloadFileFromStream } from '../../common-modules/server/utils/template';
@@ -25,7 +25,7 @@ export async function getEditData(req, res) {
 }
 
 export async function sendEmailWithFile(req, res) {
-    const { body: { ids } } = req;
+    const { body: { ids, type } } = req;
 
     if (ids.length > 100) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -33,17 +33,19 @@ export async function sendEmailWithFile(req, res) {
         });
     }
 
-    const { subjectText, bodyText } = await getEmailFieldsWithFile(req.currentUser.id);
-    const { from_email, reply_to_email } = req.currentUser.toJSON();
+    const { subjectText, bodyText } = await getEmailFieldsWithFile(req.currentUser.id, type);
+    const { from_email, reply_to_email, reply_to_grades } = req.currentUser.toJSON();
+    const reply_to = type === 'Att' ? reply_to_email : reply_to_grades;
+    const getExcelFunc = type === 'Att' ? getAttExcelBufferByLessonId : getGradeExcelBufferByLessonId;
 
     for (const id of ids) {
-        const { fileBuffer, filename, templateData } = await getAttExcelBufferByLessonId(id, req.currentUser.id);
+        const { fileBuffer, filename, templateData } = await getExcelFunc(id, req.currentUser.id);
         const attachment = {
             content: fileBuffer.toString('base64'),
             filename,
         };
         const body = Format(bodyText, templateData.lesson.teacher.name, templateData.lesson.name);
-        await sendEmail(templateData.lesson.teacher.email, from_email, subjectText, body, undefined, reply_to_email, [attachment]);
+        await sendEmail(templateData.lesson.teacher.email, from_email, subjectText, body, undefined, reply_to, [attachment]);
     }
 
     res.json({
@@ -53,7 +55,8 @@ export async function sendEmailWithFile(req, res) {
 }
 
 export async function downloadOneExcelFile(req, res) {
-    const { body: { id } } = req;
-    const { fileStream, filename } = await getAttExcelBufferByLessonIdAsStream(id, req.currentUser.id);
+    const { body: { id, type } } = req;
+    const getExcelFunc = type === 'Att' ? getAttExcelBufferByLessonIdAsStream : getGradeExcelBufferByLessonIdAsStream;
+    const { fileStream, filename } = await getExcelFunc(id, req.currentUser.id);
     downloadFileFromStream(fileStream, filename, 'xlsx', res);
 }
