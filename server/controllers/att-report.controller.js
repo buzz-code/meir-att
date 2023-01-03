@@ -285,7 +285,7 @@ export async function getStudentPercentsReport(req, res) {
         })
         qb.select({
             percents: bookshelf.knex.raw('sum(abs_count) / sum(how_many_lessons)'),
-            percents_formatted: bookshelf.knex.raw('CONCAT(FORMAT(sum(abs_count) / sum(how_many_lessons) * 100, 2), \'%\')'),
+            percents_formatted: bookshelf.knex.raw('IF(sum(abs_count) > 0, CONCAT(FORMAT(sum(abs_count) / sum(how_many_lessons) * 100, 0), \'%\'), \'\')'),
         })
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
