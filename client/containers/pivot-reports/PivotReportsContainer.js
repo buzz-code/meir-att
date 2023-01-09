@@ -85,6 +85,7 @@ const PivotReportsContainer = ({ entity, title }) => {
       disableUpdate={true}
       disableDelete={true}
       getExportColumns={getExportColumns}
+      isExportPdfLandscape={true}
     />
   );
 };
