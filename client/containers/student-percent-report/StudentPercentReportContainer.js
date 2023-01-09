@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Table from '../../../common-modules/client/components/table/Table';
 import * as crudAction from '../../../common-modules/client/actions/crudAction';
-import { getPropsForAutoComplete } from '../../../common-modules/client/utils/formUtil';
+import {
+  getPropsForAutoComplete,
+  getPropsForHideZeroValues,
+} from '../../../common-modules/client/utils/formUtil';
 
 const getColumns = ({ students, teachers, klasses, lessons }) => [
   { field: 'student_tz', title: 'תז תלמידה' },
@@ -33,7 +36,12 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
   },
   // { field: 'report_date', title: 'תאריך הדיווח', type: 'date' },
   { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
-  { field: 'abs_count', title: 'חיסורים', type: 'numeric' },
+  {
+    field: 'abs_count',
+    title: 'חיסורים',
+    type: 'numeric',
+    ...getPropsForHideZeroValues('abs_count'),
+  },
   // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
   // { field: 'sheet_name', title: 'חודש דיווח' },
   // { field: 'absnce_count', title: 'חיסורים מאושרים', editable: 'never' },
