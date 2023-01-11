@@ -33,7 +33,7 @@ const getMonthName = (month) => {
     }
 }
 
-const addMetadataToTemplateData = async (templateData, title, diaryDate = null, isWithDate = true) => {
+const addMetadataToTemplateData = async (templateData, title, diaryDate = null, isWithDate = true, headerUrl = 'header.jpg') => {
     if (isWithDate) {
         const heDate = new hebcal.HDate(diaryDate ? new Date(diaryDate) : new Date());
         templateData.title = title + '- ' + getMonthName(heDate.month) + ' ' + hebcal.gematriya(heDate.year);
@@ -41,7 +41,7 @@ const addMetadataToTemplateData = async (templateData, title, diaryDate = null, 
         templateData.title = title;
     }
     templateData.font = 'data:font/truetype;base64,' + await fs.promises.readFile(path.join(constant.assetsDir, 'fonts', 'ELEGANTIBOLD.TTF'), { encoding: 'base64' });
-    templateData.img = 'data:image;base64,' + await fs.promises.readFile(path.join(constant.assetsDir, 'img', 'header.jpg'), { encoding: 'base64' });
+    templateData.img = 'data:image;base64,' + await fs.promises.readFile(path.join(constant.assetsDir, 'img', headerUrl), { encoding: 'base64' });
 }
 
 export async function getDiaryStream(groupId, diaryDate) {
@@ -85,11 +85,19 @@ export async function getDiaryMergedPdfStream(groups, diaryDate) {
     return { fileStream, filename: 'יומנים' };
 }
 
+function getStudentReportHeader(user_id) {
+    const imageName = `user-${user_id}.png`;
+    if (fs.existsSync(path.join(constant.assetsDir, 'img', imageName))) {
+        return imageName;
+    }
+    return 'header.jpg';
+}
 
 export async function getStudentReportStream(student_tz, klass_id, user_id) {
     const templatePath = path.join(templatesDir, "student-report.ejs");
     const templateData = await getStudentReportData(student_tz, klass_id, user_id);
-    await addMetadataToTemplateData(templateData, 'דוח לתלמידה', null, false);
+    const userHeaderImage = getStudentReportHeader(user_id);
+    await addMetadataToTemplateData(templateData, 'דוח לתלמידה', null, false, userHeaderImage);
     const html = await renderEjsTemplate(templatePath, templateData);
     const fileStream = await getPdfStreamFromHtml(html);
     const filename = 'דוח לתלמידה ' + templateData.student.name;
