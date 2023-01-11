@@ -47,7 +47,7 @@
                 /* font-size: 1.25rem; */
                 /* color: white; */
             }
-            .student-name {
+            .full-cell {
                 min-width: 75px;
                 max-width: 100px;
             }
@@ -60,42 +60,33 @@
         <%- include('header', { title, img }); %>
         <div class="container">
             <div class="header-wrapper">
-                <% if (group.klass) { %>
+                <% if (student) { %>
+                    <h3>תלמידה: 
+                        <span class="value"><%= student.name %></span>
+                    </h3>
+                <% } %>
+                <% if (klass) { %>
                     <h3>כיתה: 
-                        <span class="value"><%= group.klass.name %></span>
-                    </h3>
-                <% } %>
-                <% if (group.teacher) { %>
-                    <h3>מורה: 
-                        <span class="value"><%= group.teacher.name %></span>
-                    </h3>
-                <% } %>
-                <% if (group.lesson) { %>
-                    <h3>שיעור: 
-                        <span class="value"><%= group.lesson.name %></span>
+                        <span class="value"><%= klass.name %></span>
                     </h3>
                 <% } %>
             </div>
 
             <table>
-            <% if (students.length > 0) { %>
+            <% if (reports.length > 0) { %>
                 <tr>
-                    <th> </th>
-                    <th>שם / תאריך</th>
-                    <% for(var i = 0; i < group.lesson_count; i++) {%>
-                        <th class="empty_cell">&nbsp;</th>
-                    <% } %>
+                    <th>מקצוע</th>
+                    <th>שם המורה</th>
+                    <th>אחוז נוכחות</th>
                 </tr>
-                <% students.forEach((student, index) => {%>
+                <% reports.forEach((report, index) => {%>
                     <tr>
-                        <td><%= index + 1 %></td>
-                        <td class="student-name"><%= student.name %></td>
-                        <% for(var i = 0; i < group.lesson_count; i++) {%>
-                            <td class="empty_cell">&nbsp;</td>
-                        <% } %>
+                        <td class="full-cell"><%= report.lesson_name %></td>
+                        <td class="full-cell"><%= report.teacher_name %></td>
+                        <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
                     </tr>
-                <%  });%>
-            <% }%>
+                <% }) %>
+            <% } %>
             </table>
         </div>
     </body>

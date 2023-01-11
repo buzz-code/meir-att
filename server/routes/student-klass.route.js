@@ -15,6 +15,11 @@ const router = genericRouteWithController('student-klass', 'StudentKlass', (rout
         .post((req, res) => {
             exportPdf(req, res);
         });
+
+    router.route('/download-student-report')
+        .post(async (req, res) => {
+            await ctrl.downloadStudentReport(req, res);
+        });
 });
 
 export default router;

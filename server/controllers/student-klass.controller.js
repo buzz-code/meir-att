@@ -2,6 +2,8 @@ import { StudentKlass, Student, Klass } from '../models';
 import { applyFilters, fetchPage } from '../../common-modules/server/controllers/generic.controller';
 import { getListFromTable } from '../../common-modules/server/utils/common';
 import bookshelf from '../../common-modules/server/config/bookshelf';
+import { getStudentReportMergedPdfStream } from '../utils/printHelper';
+import { downloadFileFromStream } from '../../common-modules/server/utils/template';
 
 /**
  * Find all the items
@@ -75,4 +77,10 @@ export async function reportByKlassType(req, res) {
         })
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
+}
+
+export async function downloadStudentReport(req, res) {
+    const { body: { ids, klass } } = req;
+    const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id);
+    downloadFileFromStream(fileStream, filename, 'pdf', res);
 }

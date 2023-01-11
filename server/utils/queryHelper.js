@@ -1,6 +1,6 @@
 import moment from "moment";
 import bookshelf from '../../common-modules/server/config/bookshelf';
-import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text } from "../models";
+import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student } from "../models";
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })
@@ -56,6 +56,44 @@ export async function getDiaryDataByGroupId(group_id) {
     const students = await getStudentsByUserIdAndKlassId(group.user_id, group.klass_id);
 
     return { group, students: students.sort((a, b) => a.name?.trim()?.localeCompare(b.name?.trim())) };
+}
+
+export async function getStudentReportData(student_tz, klass_id, user_id) {
+    const [student, klass, reports] = await Promise.all([
+        new Student().where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
+        klass_id && new Klass().where({ user_id, key: klass_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
+        getAttReportsForStudentReport(user_id, student_tz, klass_id),
+    ])
+
+    return { student, klass, reports }
+}
+
+async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
+    const reportsFilter = {
+        'att_reports.user_id': user_id,
+        student_tz
+    };
+    if (klass_id) {
+        reportsFilter.klass_id = klass_id;
+    }
+
+    return new AttReport()
+        .where(reportsFilter)
+        .query(qb => {
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
+                .leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
+                .groupBy('lessons.name', 'teachers.name')
+                .select({
+                    lesson_name: 'lessons.name',
+                    teacher_name: 'teachers.name',
+                })
+                .sum({
+                    lessons: 'how_many_lessons',
+                    abs_count: 'abs_count',
+                })
+        })
+        .fetchAll()
+        .then(res => res.toJSON())
 }
 
 function getTextByUserIdAndName(user_id, name) {

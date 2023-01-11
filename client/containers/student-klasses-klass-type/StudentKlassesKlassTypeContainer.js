@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Table from '../../../common-modules/client/components/table/Table';
@@ -19,7 +19,7 @@ const getColumns = ({ students, klasses }) => [
   { field: 'klasses_null', title: 'התמחות נוספת' },
 ];
 const getFilters = ({ students, klasses }) => [
-  { field: 'תלמידה', label: 'תעודת זהות', type: 'text', operator: 'like' },
+  { field: 'student_tz', label: 'תעודת זהות', type: 'text', operator: 'like' },
   {
     field: 'students.tz',
     label: 'תלמידה',
@@ -38,14 +38,40 @@ const getFilters = ({ students, klasses }) => [
   },
 ];
 
+const getActions = (handleDownloadStudentReport) => [
+  {
+    icon: 'download',
+    tooltip: 'הורד דוח לתלמידה',
+    onClick: handleDownloadStudentReport,
+  },
+];
+
 const StudentKlassesKlassTypeontainer = ({ entity, title }) => {
   const dispatch = useDispatch();
   const {
     GET: { '../get-edit-data': editData },
   } = useSelector((state) => state[entity]);
 
+  const [conditions, setConditions] = useState({});
+
   const columns = useMemo(() => getColumns(editData || {}), [editData]);
   const filters = useMemo(() => getFilters(editData || {}), [editData]);
+
+  const handleDownloadStudentReport = useCallback(
+    (e, selectedRows) => {
+      return dispatch(
+        crudAction.download(entity, 'POST', '../download-student-report', {
+          klass: conditions[2]?.value,
+          ids: selectedRows.map((item) => item.student_tz),
+        })
+      );
+    },
+    [entity, conditions]
+  );
+
+  const actions = useMemo(() => getActions(handleDownloadStudentReport), [
+    handleDownloadStudentReport,
+  ]);
 
   useEffect(() => {
     dispatch(crudAction.customHttpRequest(entity, 'GET', '../get-edit-data'));
@@ -57,9 +83,12 @@ const StudentKlassesKlassTypeontainer = ({ entity, title }) => {
       title={title}
       columns={columns}
       filters={filters}
+      additionalActions={actions}
       disableAdd={true}
       disableDelete={true}
       disableUpdate={true}
+      onConditionUpdate={setConditions}
+      isBulkDelete={true}
     />
   );
 };
