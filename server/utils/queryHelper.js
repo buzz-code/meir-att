@@ -124,7 +124,7 @@ export async function getEmailFieldsWithFile(user_id, type) {
 
 export async function getTemplateDataByLessonId(lesson_id) {
     const lesson = await new Lesson().where({ id: lesson_id })
-        .fetch({ withRelated: ['teacher'] })
+        .fetch({ withRelated: ['teacher', 'klass'] })
         .then(res => res.toJSON());
     const students = await getStudentsByUserIdAndKlassIds(lesson.user_id, lesson.klasses);
 
