@@ -59,7 +59,7 @@ const StudentKlassesKlassTypeontainer = ({ entity, title }) => {
 
   const handleDownloadStudentReport = useCallback(
     (e, selectedRows) => {
-      const personalNote = prompt('האם תרצי להוסיף הודעה לתלמידה?');
+      const personalNote = prompt('הודעה לתלמידה');
       return dispatch(
         crudAction.download(entity, 'POST', '../download-student-report', {
           klass: conditions[2]?.value,
