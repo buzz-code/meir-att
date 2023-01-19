@@ -86,6 +86,44 @@
                         <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
                     </tr>
                 <% }) %>
+                <tr>
+                    <th>אחוז נוכחות כללי</th>
+                    <th>&nbsp;</th>
+                    <th>
+                        <%= 
+                            Math.round(
+                                (
+                                    (
+                                        reports.reduce((a, b) => a + b.lessons, 0) 
+                                            - 
+                                        reports.reduce((a, b) => a + b.abs_count, 0)
+                                    ) / 
+                                    reports.reduce((a, b) => a + b.lessons, 0)
+                                ) * 100
+                            )
+                        %>%
+                    </th>
+                </tr>
+                <tr>
+                    <th>אחוז נוכחות מאושרת</th>
+                    <th><%=JSON.stringify(approved_abs_count)%></th>
+                    <th>
+                        <%= 
+                            Math.round(
+                                (
+                                    (
+                                        reports.reduce((a, b) => a + b.lessons, 0) 
+                                            - 
+                                        reports.reduce((a, b) => a + b.abs_count, 0)
+                                            +
+                                        (approved_abs_count?.total || 0)
+                                    ) / 
+                                    reports.reduce((a, b) => a + b.lessons, 0)
+                                ) * 100
+                            )
+                        %>%
+                    </th>
+                </tr>
             <% } %>
             </table>
 

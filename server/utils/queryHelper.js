@@ -1,6 +1,6 @@
 import moment from "moment";
 import bookshelf from '../../common-modules/server/config/bookshelf';
-import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student } from "../models";
+import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student, KnownAbsence } from "../models";
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })
@@ -59,13 +59,14 @@ export async function getDiaryDataByGroupId(group_id) {
 }
 
 export async function getStudentReportData(student_tz, klass_id, user_id) {
-    const [student, klass, reports] = await Promise.all([
+    const [student, klass, reports, approved_abs_count] = await Promise.all([
         new Student().where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         klass_id && new Klass().where({ user_id, key: klass_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         getAttReportsForStudentReport(user_id, student_tz, klass_id),
+        getApprovedAbsTotalCount(user_id, student_tz, klass_id),
     ])
 
-    return { student, klass, reports }
+    return { student, klass, reports, approved_abs_count }
 }
 
 async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
@@ -94,6 +95,30 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
         })
         .fetchAll()
         .then(res => res.toJSON())
+}
+
+
+async function getApprovedAbsTotalCount(user_id, student_tz, klass_id) {
+    const reportsFilter = {
+        'known_absences.user_id': user_id,
+        student_tz
+    };
+    if (klass_id) {
+        reportsFilter.klass_id = klass_id;
+    }
+
+    return new KnownAbsence()
+        .where(reportsFilter)
+        .query(qb => {
+            qb.groupBy('student_tz')
+                .sum({
+                    total: 'absnce_count',
+                })
+                .select('student_tz')
+        })
+        .fetchAll()
+        .then(res => res.toJSON())
+        .then(res => res[0])
 }
 
 function getTextByUserIdAndName(user_id, name) {
