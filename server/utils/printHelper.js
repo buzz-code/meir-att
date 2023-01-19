@@ -98,7 +98,7 @@ export async function getStudentReportStream(student_tz, klass_id, user_id, pers
     const templateData = await getStudentReportData(student_tz, klass_id, user_id);
     templateData.personalNote = personalNote;
     const userHeaderImage = getStudentReportHeader(user_id);
-    await addMetadataToTemplateData(templateData, 'דוח לתלמידה', null, false, userHeaderImage);
+    await addMetadataToTemplateData(templateData, 'סיכום נוכחות', null, false, userHeaderImage);
     const html = await renderEjsTemplate(templatePath, templateData);
     const fileStream = await getPdfStreamFromHtml(html);
     const filename = 'דוח לתלמידה ' + templateData.student.name;
