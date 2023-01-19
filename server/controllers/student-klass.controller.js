@@ -80,7 +80,7 @@ export async function reportByKlassType(req, res) {
 }
 
 export async function downloadStudentReport(req, res) {
-    const { body: { ids, klass } } = req;
-    const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id);
+    const { body: { ids, klass, personalNote } } = req;
+    const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, personalNote);
     downloadFileFromStream(fileStream, filename, 'pdf', res);
 }
