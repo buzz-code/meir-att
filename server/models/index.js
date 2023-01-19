@@ -95,6 +95,9 @@ export const Lesson = createModel('lessons', {
     },
     teacher() {
         return this.belongsTo(Teacher, 'teacher_id', 'tz');
+    },
+    klass() {
+        return this.belongsTo(Klass, 'klasses', 'key');
     }
 })
 
@@ -106,7 +109,7 @@ export const StudentKlass = createModel('student_klasses', {
         return this.belongsTo(Student, 'student_tz', 'tz');
     },
     klass() {
-        return this.belongsTo(Teacher, 'teacher_id', 'tz');
+        return this.belongsTo(Klass, 'klass_id', 'key');
     }
 })
 
