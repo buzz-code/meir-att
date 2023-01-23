@@ -37,26 +37,27 @@ const getFilters = () => [
   { field: 'teachers.name', label: 'מורה', type: 'text', operator: 'like' },
   { field: 'lessons.name', label: 'שיעור', type: 'text', operator: 'like' },
 ];
-const getActions = (handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmailToAll3) => [
-  {
-    icon: 'mail',
-    tooltip: 'שלח מייל ראשון לכל המורות שלא שלחו דיווח',
-    isFreeAction: true,
-    onClick: handleSendEmailToAll1,
-  },
-  {
-    icon: 'mail',
-    tooltip: 'שלח מייל שני לכל המורות שלא שלחו דיווח',
-    isFreeAction: true,
-    onClick: handleSendEmailToAll2,
-  },
-  {
-    icon: 'mail',
-    tooltip: 'שלח מייל לכל המורות שכן שלחו דיווח',
-    isFreeAction: true,
-    onClick: handleSendEmailToAll3,
-  },
-];
+const getActions = (handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmailToAll3) =>
+  [
+    {
+      icon: 'mail',
+      tooltip: 'שלח מייל ראשון לכל המורות שלא שלחו דיווח',
+      isFreeAction: true,
+      onClick: handleSendEmailToAll1,
+    },
+    {
+      icon: 'mail',
+      tooltip: 'שלח מייל שני לכל המורות שלא שלחו דיווח',
+      isFreeAction: true,
+      onClick: handleSendEmailToAll2,
+    },
+    {
+      icon: 'mail',
+      tooltip: 'שלח מייל לכל המורות שכן שלחו דיווח',
+      isFreeAction: true,
+      onClick: handleSendEmailToAll3,
+    },
+  ].flatMap((item) => [item, { ...item, isFreeAction: false }]);
 
 const TeacherReportStatusContainer = ({ entity, title }) => {
   const dispatch = useDispatch();
@@ -64,19 +65,29 @@ const TeacherReportStatusContainer = ({ entity, title }) => {
   const [conditions, setConditions] = useState({});
 
   const handleSendEmailToAll = useCallback(
-    (message) => {
+    (message, selectedRows) => {
       dispatch(
         crudAction.customHttpRequest(entity, 'POST', 'send-email-to-all', {
           filters: conditions,
           message,
+          tzs: selectedRows?.map && selectedRows.map((item) => item.teacher_tz),
         })
       );
     },
     [entity, conditions]
   );
-  const handleSendEmailToAll1 = useCallback(() => handleSendEmailToAll(1), [handleSendEmailToAll]);
-  const handleSendEmailToAll2 = useCallback(() => handleSendEmailToAll(2), [handleSendEmailToAll]);
-  const handleSendEmailToAll3 = useCallback(() => handleSendEmailToAll(3), [handleSendEmailToAll]);
+  const handleSendEmailToAll1 = useCallback(
+    (e, selectedRows) => handleSendEmailToAll(1, selectedRows),
+    [handleSendEmailToAll]
+  );
+  const handleSendEmailToAll2 = useCallback(
+    (e, selectedRows) => handleSendEmailToAll(2, selectedRows),
+    [handleSendEmailToAll]
+  );
+  const handleSendEmailToAll3 = useCallback(
+    (e, selectedRows) => handleSendEmailToAll(3, selectedRows),
+    [handleSendEmailToAll]
+  );
 
   const columns = useMemo(() => getColumns(), []);
   const filters = useMemo(() => getFilters(), []);
@@ -95,6 +106,7 @@ const TeacherReportStatusContainer = ({ entity, title }) => {
       disableAdd={true}
       disableUpdate={true}
       disableDelete={true}
+      isBulkDelete={true}
       onConditionUpdate={setConditions}
     />
   );

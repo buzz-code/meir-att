@@ -56,6 +56,7 @@ export function getFindAllQuery(user_id, filters) {
     dbQuery.query(qb => {
         qb.groupBy('teachers.id', 'lessons.id', 'klasses.id')
         qb.select({
+            teacher_tz: 'teachers.tz',
             teacher_name: 'teachers.name',
             teacher_report_type: 'teachers.report_type',
             teacher_email: 'teachers.email',
@@ -72,10 +73,22 @@ export async function teachersWithReportStatus(req, res) {
     fetchPage({ dbQuery, countQuery }, req.query, res);
 }
 
-export async function sendEmailToAllTeachers(req, res) {
-    const { body: { filters, message } } = req;
+async function getEmailData(req, filters, tzs) {
+    if (tzs) {
+        filters = [{
+            field: 'teachers.tz',
+            operator: 'in',
+            value: tzs,
+        }]
+    }
     const { dbQuery, countQuery } = getFindAllQuery(req.currentUser.id, JSON.stringify(filters));
     const { data } = await fetchPagePromise({ dbQuery, countQuery }, { page: 0, pageSize: 1000 });
+    return data;
+}
+
+export async function sendEmailToAllTeachers(req, res) {
+    const { body: { filters, message, tzs } } = req;
+    const data = await getEmailData(req, filters, tzs);
 
     const teachersToSend = data
         .filter(item => !item.is_report_sent || message == 3 && item.is_report_sent)
