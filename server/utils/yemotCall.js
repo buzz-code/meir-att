@@ -117,9 +117,9 @@ export class YemotCall extends CallBase {
     }
 
     async getStudentReports() {
-        const { idsToSkip, existingReports } = await this.askExistingReports('att');
-
         await this.getSheetName();
+
+        const { idsToSkip, existingReports } = await this.askExistingReports('att');
 
         await this.getHowManyLessons();
 
@@ -144,9 +144,9 @@ export class YemotCall extends CallBase {
     }
 
     async getStudentGrades() {
-        const { idsToSkip, existingReports } = await this.askExistingReports('grades')
-
         await this.getSheetName();
+
+        const { idsToSkip, existingReports } = await this.askExistingReports('grades')
 
         // await this.getHowManyLessons();
 
@@ -172,9 +172,9 @@ export class YemotCall extends CallBase {
     async askExistingReports(reportType) {
         let existingReports = [];
         if (reportType === 'grades') {
-            existingReports = await queryHelper.getExistingGrades(this.user.id, this.params.baseReport.klass_id, this.params.baseReport.lesson_id);
+            existingReports = await queryHelper.getExistingGrades(this.user.id, this.params.baseReport.klass_id, this.params.baseReport.lesson_id, this.sheetName);
         } else if (reportType === 'att') {
-            existingReports = await queryHelper.getExistingReport(this.user.id, this.params.baseReport.klass_id, this.params.baseReport.lesson_id);
+            existingReports = await queryHelper.getExistingReport(this.user.id, this.params.baseReport.klass_id, this.params.baseReport.lesson_id, this.sheetName);
         }
 
         let idsToSkip = new Set();

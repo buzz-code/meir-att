@@ -27,15 +27,15 @@ export function getLessonByUserIdAndLessonId(user_id, key) {
         .then(res => res ? res.toJSON() : null);
 }
 
-export function getExistingReport(user_id, klass_id, lesson_id) {
-    return new AttReport().where({ user_id, klass_id, lesson_id })
+export function getExistingReport(user_id, klass_id, lesson_id, sheet_name) {
+    return new AttReport().where({ user_id, klass_id, lesson_id, sheet_name })
         .where('report_date', '>=', moment().add(-7, 'days').toISOString().substr(0, 10))
         .fetchAll()
         .then(res => res ? res.toJSON() : null);
 }
 
-export function getExistingGrades(user_id, klass_id, lesson_id) {
-    return new Grade().where({ user_id, klass_id, lesson_id })
+export function getExistingGrades(user_id, klass_id, lesson_id, sheet_name) {
+    return new Grade().where({ user_id, klass_id, lesson_id, sheet_name })
         .where('report_date', '>=', moment().add(-7, 'days').toISOString().substr(0, 10))
         .fetchAll()
         .then(res => res ? res.toJSON() : null);
