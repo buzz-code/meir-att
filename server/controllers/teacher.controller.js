@@ -116,11 +116,12 @@ export async function sendEmailToAllTeachers(req, res) {
     }
 
     const { subjectText, bodyText } = await getEmailFields(req.currentUser.id, message);
-    const { from_email, reply_to_email } = req.currentUser.toJSON();
+    const { from_email, reply_to_email, reply_to_grades } = req.currentUser.toJSON();
+    const reply_to = message != 4 ? reply_to_email : reply_to_grades;
 
     for (const teacherDetails of teachersToSend) {
         const body = format(bodyText, teacherDetails.teacher_name, teacherDetails.lesson_name, teacherDetails.klass_name);
-        await sendEmail(teacherDetails.teacher_email, from_email, subjectText, body, undefined, reply_to_email);
+        await sendEmail(teacherDetails.teacher_email, from_email, subjectText, body, undefined, reply_to);
     }
 
     res.json({
