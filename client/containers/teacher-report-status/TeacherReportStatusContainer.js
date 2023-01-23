@@ -22,6 +22,12 @@ const getColumns = () => [
     type: 'boolean',
     ...getPropsForAutoComplete('is_report_sent', booleanList),
   },
+  {
+    field: 'is_grades_sent',
+    title: 'האם נשלחו ציונים',
+    type: 'boolean',
+    ...getPropsForAutoComplete('is_grades_sent', booleanList),
+  },
 ];
 const getFilters = () => [
   { field: 'lessons.end_date', label: 'שיעור מתאריך', type: 'date', operator: 'date-before' },
@@ -37,7 +43,12 @@ const getFilters = () => [
   { field: 'teachers.name', label: 'מורה', type: 'text', operator: 'like' },
   { field: 'lessons.name', label: 'שיעור', type: 'text', operator: 'like' },
 ];
-const getActions = (handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmailToAll3) =>
+const getActions = (
+  handleSendEmailToAll1,
+  handleSendEmailToAll2,
+  handleSendEmailToAll3,
+  handleSendEmailToAll4
+) =>
   [
     {
       icon: 'mail',
@@ -56,6 +67,12 @@ const getActions = (handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmai
       tooltip: 'שלח מייל לכל המורות שכן שלחו דיווח',
       isFreeAction: true,
       onClick: handleSendEmailToAll3,
+    },
+    {
+      icon: 'mail',
+      tooltip: 'שלח מייל לכל המורות שכן שלחו ציונים',
+      isFreeAction: true,
+      onClick: handleSendEmailToAll4,
     },
   ].flatMap((item) => [item, { ...item, isFreeAction: false }]);
 
@@ -88,12 +105,22 @@ const TeacherReportStatusContainer = ({ entity, title }) => {
     (e, selectedRows) => handleSendEmailToAll(3, selectedRows),
     [handleSendEmailToAll]
   );
+  const handleSendEmailToAll4 = useCallback(
+    (e, selectedRows) => handleSendEmailToAll(4, selectedRows),
+    [handleSendEmailToAll]
+  );
 
   const columns = useMemo(() => getColumns(), []);
   const filters = useMemo(() => getFilters(), []);
   const actions = useMemo(
-    () => getActions(handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmailToAll3),
-    [handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmailToAll3]
+    () =>
+      getActions(
+        handleSendEmailToAll1,
+        handleSendEmailToAll2,
+        handleSendEmailToAll3,
+        handleSendEmailToAll4
+      ),
+    [handleSendEmailToAll1, handleSendEmailToAll2, handleSendEmailToAll3, handleSendEmailToAll4]
   );
 
   return (

@@ -41,9 +41,19 @@ export function getFindAllQuery(user_id, filters) {
                     'att_reports.lesson_id': 'lessons.key',
                     'att_reports.user_id': 'teachers.user_id'
                 })
-                    .andOn(bookshelf.knex.raw('report_date >= ?', startDate))
-                    .andOn(bookshelf.knex.raw('report_date <= ?', endDate))
-                    .andOn(bookshelf.knex.raw('sheet_name like ?', `%${sheetName}%`))
+                    .andOn(bookshelf.knex.raw('att_reports.report_date >= ?', startDate))
+                    .andOn(bookshelf.knex.raw('att_reports.report_date <= ?', endDate))
+                    .andOn(bookshelf.knex.raw('att_reports.sheet_name like ?', `%${sheetName}%`))
+            })
+            qb.leftJoin('grades', function () {
+                this.on({
+                    'grades.teacher_id': 'teachers.tz',
+                    'grades.lesson_id': 'lessons.key',
+                    'grades.user_id': 'teachers.user_id'
+                })
+                    .andOn(bookshelf.knex.raw('grades.report_date >= ?', startDate))
+                    .andOn(bookshelf.knex.raw('grades.report_date <= ?', endDate))
+                    .andOn(bookshelf.knex.raw('grades.sheet_name like ?', `%${sheetName}%`))
             })
         });
 
@@ -63,6 +73,7 @@ export function getFindAllQuery(user_id, filters) {
             lesson_name: 'lessons.name',
             klass_name: 'klasses.name',
             is_report_sent: bookshelf.knex.raw('if(count(att_reports.id) > 0, 1, 0)'),
+            is_grades_sent: bookshelf.knex.raw('if(count(grades.id) > 0, 1, 0)'),
         })
     });
     return { dbQuery, countQuery };
@@ -91,7 +102,11 @@ export async function sendEmailToAllTeachers(req, res) {
     const data = await getEmailData(req, filters, tzs);
 
     const teachersToSend = data
-        .filter(item => !item.is_report_sent || message == 3 && item.is_report_sent)
+        .filter(
+            item => !item.is_report_sent
+                || (message == 3 && item.is_report_sent)
+                || (message == 4 && !item.is_grades_sent)
+        )
         .filter(item => item.teacher_email);
 
     if (teachersToSend.length > 100) {
