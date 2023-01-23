@@ -5,9 +5,15 @@ import Table from '../../../common-modules/client/components/table/Table';
 import * as crudAction from '../../../common-modules/client/actions/crudAction';
 import { getPropsForAutoComplete } from '../../../common-modules/client/utils/formUtil';
 import { booleanList } from '../../../common-modules/server/utils/list';
+import { reportTypeList } from '../../../server/utils/listHelper';
 
 const getColumns = () => [
   { field: 'teacher_name', title: 'מורה' },
+  {
+    field: 'teacher_report_type',
+    title: 'סוג הדיווח של המורה',
+    ...getPropsForAutoComplete('teacher_report_type', reportTypeList),
+  },
   { field: 'lesson_name', title: 'שיעורים' },
   { field: 'klass_name', title: 'כיתה' },
   {

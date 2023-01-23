@@ -57,6 +57,7 @@ export function getFindAllQuery(user_id, filters) {
         qb.groupBy('teachers.id', 'lessons.id', 'klasses.id')
         qb.select({
             teacher_name: 'teachers.name',
+            teacher_report_type: 'teachers.report_type',
             teacher_email: 'teachers.email',
             lesson_name: 'lessons.name',
             klass_name: 'klasses.name',
