@@ -242,17 +242,17 @@ export class YemotCall extends CallBase {
                     this.read({ type: 'text', text: this.texts.sideMenu },
                         'sideMenu', 'tap', { max: 1, min: 1, block_asterisk: true })
                 );
-                if (this.params.sideMenu == '4') {
-                    if (index > 0) {
-                        index--;
-                    }
-                    return true;
-                } else if (this.params.sideMenu == '6') {
-                    index++;
-                    return true;
-                } else {
-                    this.params[field] = '0';
+            }
+            if (this.params[field] == '*4' || this.params.sideMenu == '4') {
+                if (index > 0) {
+                    index--;
                 }
+                return true;
+            } else if (this.params[field] == '*6' || this.params.sideMenu == '6') {
+                index++;
+                return true;
+            } else {
+                this.params[field] = '0';
             }
             return false;
         }
