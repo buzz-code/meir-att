@@ -243,6 +243,7 @@ export class YemotCall extends CallBase {
                         'sideMenu', 'tap', { max: 1, min: 1, block_asterisk: true })
                 );
             }
+            console.log('check next-prev student', field, this.params[field], this.params.sideMenu)
             if (this.params[field] == '*4' || this.params.sideMenu == '4') {
                 if (index > 0) {
                     index--;
