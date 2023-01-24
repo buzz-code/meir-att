@@ -267,6 +267,8 @@ export class YemotCall extends CallBase {
             try {
                 await callback(student, isFirstTime, handleAsterisk, existing)
                 index++;
+            } catch (ex) {
+                console.log('caught error', ex);
             } finally {
                 isFirstTime = false;
             }
