@@ -21,11 +21,11 @@ export async function findAll(req, res) {
         });
     applyFilters(dbQuery, req.query.filters);
     const countQuery = dbQuery.clone().query()
-        .countDistinct({ count: ['student_tz', 'teacher_id', /*'klass_id',*/ 'lesson_id'] })
+        .countDistinct({ count: ['student_tz', 'att_reports_and_grades.teacher_id', /*'klass_id',*/ 'lesson_id'] })
         .then(res => res[0].count);
     dbQuery.query(qb => {
-        qb.groupBy(['student_tz', 'teacher_id', /*'klass_id',*/ 'lesson_id'])
-        qb.select('student_tz', 'teacher_id', /*'klass_id',*/ 'lesson_id')
+        qb.groupBy(['student_tz', 'att_reports_and_grades.teacher_id', /*'klass_id',*/ 'lesson_id'])
+        qb.select('student_tz', 'att_reports_and_grades.teacher_id', /*'klass_id',*/ 'lesson_id')
         qb.min({
             report_date: 'report_date',
         })
