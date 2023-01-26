@@ -2,6 +2,7 @@ import { AttReportAndGrade, Lesson, Student, Teacher, Klass, User } from '../mod
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmail } from '../../common-modules/server/utils/email';
+import bookshelf from '../../common-modules/server/config/bookshelf';
 
 /**
  * Find all the items
@@ -35,6 +36,9 @@ export async function findAll(req, res) {
         })
         qb.avg({
             grade: 'grade',
+        })
+        qb.select({
+            comments: bookshelf.knex.raw('GROUP_CONCAT(comments SEPARATOR ", ")'),
         })
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
