@@ -16,6 +16,8 @@ router.use('/klass-types', require('./klass-type.route').default);
 router.use('/att-reports', require('./att-report.route').default);
 router.use('/grades', require('./grade.route').default);
 router.use('/att-reports-and-grades', require('./att-report-and-grade.route').default);
+router.use('/att-grade-effect', require('./att-grade-effect.route').default);
+router.use('/grade-names', require('./grade-name.route').default);
 router.use('/report-edit', require('./report-edit.route').default);
 router.use('/dashboard', require('./dashboard.route').default);
 router.use('/known-absences', require('./known-absence.route').default);

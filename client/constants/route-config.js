@@ -43,6 +43,8 @@ import AttReportsWithKnownAbsences from '../containers/att-reports-with-known-ab
 import TeacherReportStatus from '../containers/teacher-report-status/TeacherReportStatusContainer';
 import TeacherSalaryReport from '../containers/teacher-salary-report/TeacherSalaryReportContainer';
 import StudentPercentReport from '../containers/student-percent-report/StudentPercentReportContainer';
+import AttGradeEffect from '../containers/att-grade-effect/AttGradeEffectContainer';
+import GradeNames from '../containers/grade-names/GradeNameContainer';
 
 export default [
   [
@@ -112,6 +114,20 @@ export default [
           icon: MenuIcon,
           title: titles.KLASS_TYPES,
           props: { entity: entities.KLASS_TYPES, title: titles.KLASS_TYPES },
+        },
+        {
+          path: '/att-grade-effect',
+          component: AttGradeEffect,
+          icon: MenuIcon,
+          title: titles.ATT_GRADE_EFFECT,
+          props: { entity: entities.ATT_GRADE_EFFECT, title: titles.ATT_GRADE_EFFECT },
+        },
+        {
+          path: '/grade-names',
+          component: GradeNames,
+          icon: MenuIcon,
+          title: titles.GRADE_NAMES,
+          props: { entity: entities.GRADE_NAMES, title: titles.GRADE_NAMES },
         },
       ],
     },

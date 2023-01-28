@@ -25,3 +25,5 @@ export const GROUPS_PRINT = 'הדפסת יומנים';
 export const KNOWN_ABSENCES = 'חיסורים ידועים';
 export const ATT_REPORTS_WITH_KNOWN_ABSENCES = 'דו"ח חיסורים כולל';
 export const TEACHER_REPORT_STATUS = 'שליחת דיווחים';
+export const ATT_GRADE_EFFECT = 'קשר נוכחות - ציון';
+export const GRADE_NAMES = 'שם ציון';

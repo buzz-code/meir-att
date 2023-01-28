@@ -130,3 +130,15 @@ export const Text = createModel('texts', {
         return this.belongsTo(User);
     }
 })
+
+export const AttGradeEffect = createModel('att_grade_effect', {
+    user() {
+        return this.belongsTo(User);
+    }
+})
+
+export const GradeName = createModel('grade_names', {
+    user() {
+        return this.belongsTo(User);
+    }
+})
