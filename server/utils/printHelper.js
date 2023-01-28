@@ -93,10 +93,9 @@ function getStudentReportHeader(user_id) {
     return 'header.jpg';
 }
 
-export async function getStudentReportStream(student_tz, klass_id, user_id, personalNote, reportParams) {
+export async function getStudentReportStream(student_tz, klass_id, user_id, reportParams) {
     const templatePath = path.join(templatesDir, "student-report.ejs");
     const templateData = await getStudentReportData(student_tz, klass_id, user_id);
-    templateData.personalNote = personalNote;
     templateData.reportParams = reportParams;
     const userHeaderImage = getStudentReportHeader(user_id);
     await addMetadataToTemplateData(templateData, 'סיכום נוכחות', null, false, userHeaderImage);
@@ -106,11 +105,11 @@ export async function getStudentReportStream(student_tz, klass_id, user_id, pers
     return { fileStream, filename };
 }
 
-export async function getStudentReportMergedPdfStream(ids, klass_id, user_id, personalNote, reportParams) {
+export async function getStudentReportMergedPdfStream(ids, klass_id, user_id, reportParams) {
     var merger = new PDFMerger();
 
     for (const id of ids) {
-        const { fileStream, filename } = await getStudentReportStream(id, klass_id, user_id, personalNote, reportParams);
+        const { fileStream, filename } = await getStudentReportStream(id, klass_id, user_id, reportParams);
         const filePath = temp.path({ prefix: filename, suffix: '.pdf' });
         await fs.promises.writeFile(filePath, await streamToBuffer(fileStream));
         merger.add(filePath);

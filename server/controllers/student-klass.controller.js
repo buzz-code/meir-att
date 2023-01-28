@@ -92,7 +92,8 @@ export async function downloadStudentReport(req, res) {
             reportParams.hideAbsTotal = true;
         }
         const { body: { ids, klass, personalNote } } = req;
-        const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, personalNote, reportParams);
+        reportParams.personalNote = personalNote;
+        const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, reportParams);
         downloadFileFromStream(fileStream, filename, 'pdf', res);
     } catch (e) {
         console.log(e)
