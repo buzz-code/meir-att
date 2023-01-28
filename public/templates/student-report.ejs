@@ -78,17 +78,16 @@
                 <tr>
                     <th>מקצוע</th>
                     <th>שם המורה</th>
-                    <th>אחוז נוכחות</th>
                     <% if (reportParams.grades) { %>
                         <th>ציון</th>
                     <% } %>
+                    <th>אחוז נוכחות</th>
                 </tr>
                 <% reports.forEach((report, index) => { %>
                     <% if (!reportParams.forceGrades || report.grade) { %>
                         <tr>
                             <td class="full-cell"><%= report.lesson_name %></td>
                             <td class="full-cell"><%= report.teacher_name %></td>
-                            <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
                             <% if (reportParams.grades) { %>
                                 <td class="full-cell">
                                 <% if (reportParams.grade) { %>
@@ -98,6 +97,7 @@
                                 <% } %>
                                 </td>
                             <% } %>
+                            <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
                             </tr>
                     <% } %>
                 <% }) %>
@@ -105,6 +105,9 @@
                     <tr>
                         <th>אחוז נוכחות כללי</th>
                         <th>&nbsp;</th>
+                        <% if (reportParams.grades) { %>
+                            <th>&nbsp;</th>
+                        <% } %>
                         <th>
                             <%= 
                                 Math.round(
@@ -123,6 +126,9 @@
                     <tr>
                         <th>נוכחות בקיזוז חיסורים מאושרים</th>
                         <th>&nbsp;</th>
+                        <% if (reportParams.grades) { %>
+                            <th>&nbsp;</th>
+                        <% } %>
                         <th>
                             <%= 
                                 Math.round(
