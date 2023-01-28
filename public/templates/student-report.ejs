@@ -79,56 +79,66 @@
                     <th>מקצוע</th>
                     <th>שם המורה</th>
                     <th>אחוז נוכחות</th>
-                    <th>ציון</th>
+                    <% if (reportParams.grades) { %>
+                        <th>ציון</th>
+                    <% } %>
                 </tr>
-                <% reports.forEach((report, index) => {%>
-                    <% if (report.grade) { %>
+                <% reports.forEach((report, index) => { %>
+                    <% if (!reportParams.forceGrades || report.grade) { %>
                         <tr>
                             <td class="full-cell"><%= report.lesson_name %></td>
                             <td class="full-cell"><%= report.teacher_name %></td>
                             <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
-                            <td class="full-cell"><%= report.grade %>%</td>
-                        </tr>
+                            <% if (reportParams.grades) { %>
+                                <td class="full-cell">
+                                <% if (reportParams.grade) { %>
+                                    <%= report.grade %>%
+                                <% } %>
+                                </td>
+                            <% } %>
+                            </tr>
                     <% } %>
                 <% }) %>
-                <tr>
-                    <th>אחוז נוכחות כללי</th>
-                    <th>&nbsp;</th>
-                    <th>
-                        <%= 
-                            Math.round(
-                                (
+                <% if (!reportParams.hideAbsTotal) { %>
+                    <tr>
+                        <th>אחוז נוכחות כללי</th>
+                        <th>&nbsp;</th>
+                        <th>
+                            <%= 
+                                Math.round(
                                     (
-                                        reports.reduce((a, b) => a + b.lessons, 0) 
-                                            - 
-                                        reports.reduce((a, b) => a + b.abs_count, 0)
-                                    ) / 
-                                    reports.reduce((a, b) => a + b.lessons, 0)
-                                ) * 100
-                            )
-                        %>%
-                    </th>
-                </tr>
-                <tr>
-                    <th>נוכחות בקיזוז חיסורים מאושרים</th>
-                    <th>&nbsp;</th>
-                    <th>
-                        <%= 
-                            Math.round(
-                                (
+                                        (
+                                            reports.reduce((a, b) => a + b.lessons, 0) 
+                                                - 
+                                            reports.reduce((a, b) => a + b.abs_count, 0)
+                                        ) / 
+                                        reports.reduce((a, b) => a + b.lessons, 0)
+                                    ) * 100
+                                )
+                            %>%
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>נוכחות בקיזוז חיסורים מאושרים</th>
+                        <th>&nbsp;</th>
+                        <th>
+                            <%= 
+                                Math.round(
                                     (
-                                        reports.reduce((a, b) => a + b.lessons, 0) 
-                                            - 
-                                        reports.reduce((a, b) => a + b.abs_count, 0)
-                                            +
-                                        (approved_abs_count?.total || 0)
-                                    ) / 
-                                    reports.reduce((a, b) => a + b.lessons, 0)
-                                ) * 100
-                            )
-                        %>%
-                    </th>
-                </tr>
+                                        (
+                                            reports.reduce((a, b) => a + b.lessons, 0) 
+                                                - 
+                                            reports.reduce((a, b) => a + b.abs_count, 0)
+                                                +
+                                            (approved_abs_count?.total || 0)
+                                        ) / 
+                                        reports.reduce((a, b) => a + b.lessons, 0)
+                                    ) * 100
+                                )
+                            %>%
+                        </th>
+                    </tr>
+                <% } %>
             <% } %>
             </table>
 

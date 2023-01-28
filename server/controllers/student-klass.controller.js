@@ -80,7 +80,22 @@ export async function reportByKlassType(req, res) {
 }
 
 export async function downloadStudentReport(req, res) {
-    const { body: { ids, klass, personalNote } } = req;
-    const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, personalNote);
-    downloadFileFromStream(fileStream, filename, 'pdf', res);
+    try {
+        const reportParams = {};
+        if ([1, 2].includes(req.currentUser.id)) {
+            reportParams.grades = true;
+        }
+        if ([1].includes(req.currentUser.id)) {
+            reportParams.forceGrades = true;
+        }
+        if ([1].includes(req.currentUser.id)) {
+            reportParams.hideAbsTotal = true;
+        }
+        const { body: { ids, klass, personalNote } } = req;
+        const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, personalNote, reportParams);
+        downloadFileFromStream(fileStream, filename, 'pdf', res);
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
 }
