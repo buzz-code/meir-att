@@ -1,6 +1,6 @@
 import moment from "moment";
 import bookshelf from '../../common-modules/server/config/bookshelf';
-import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student, KnownAbsence } from "../models";
+import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student, KnownAbsence, AttReportAndGrade } from "../models";
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })
@@ -71,18 +71,18 @@ export async function getStudentReportData(student_tz, klass_id, user_id) {
 
 async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
     const reportsFilter = {
-        'att_reports.user_id': user_id,
+        'att_reports_and_grades.user_id': user_id,
         student_tz
     };
     if (klass_id) {
         reportsFilter.klass_id = klass_id;
     }
 
-    return new AttReport()
+    return new AttReportAndGrade()
         .where(reportsFilter)
         .query(qb => {
-            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
-                .leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
+                .leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
                 .groupBy('lessons.name', 'teachers.name')
                 .select({
                     lesson_name: 'lessons.name',
@@ -91,6 +91,9 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
                 .sum({
                     lessons: 'how_many_lessons',
                     abs_count: 'abs_count',
+                })
+                .avg({
+                    grade: 'grade',
                 })
         })
         .fetchAll()

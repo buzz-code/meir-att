@@ -79,13 +79,17 @@
                     <th>מקצוע</th>
                     <th>שם המורה</th>
                     <th>אחוז נוכחות</th>
+                    <th>ציון</th>
                 </tr>
                 <% reports.forEach((report, index) => {%>
-                    <tr>
-                        <td class="full-cell"><%= report.lesson_name %></td>
-                        <td class="full-cell"><%= report.teacher_name %></td>
-                        <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
-                    </tr>
+                    <% if (report.grade) { %>
+                        <tr>
+                            <td class="full-cell"><%= report.lesson_name %></td>
+                            <td class="full-cell"><%= report.teacher_name %></td>
+                            <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
+                            <td class="full-cell"><%= report.grade %>%</td>
+                        </tr>
+                    <% } %>
                 <% }) %>
                 <tr>
                     <th>אחוז נוכחות כללי</th>
