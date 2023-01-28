@@ -91,7 +91,11 @@
                             <% if (reportParams.grades) { %>
                                 <td class="full-cell">
                                 <% if (report.grade) { %>
-                                    <%= report.grade %>%
+                                    <% if (grade_names_dict && grade_names_dict[report.grade]) { %>
+                                        <%= grade_names_dict[report.grade] %>
+                                    <% } else { %>
+                                        <%= report.grade %>%
+                                    <% } %>
                                 <% } else { %>
                                     &nbsp;
                                 <% } %>
