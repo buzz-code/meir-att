@@ -1,6 +1,6 @@
 import moment from "moment";
 import bookshelf from '../../common-modules/server/config/bookshelf';
-import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student, KnownAbsence, AttReportAndGrade, GradeName } from "../models";
+import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student, KnownAbsence, AttReportAndGrade, GradeName, AttGradeEffect } from "../models";
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })
@@ -59,15 +59,16 @@ export async function getDiaryDataByGroupId(group_id) {
 }
 
 export async function getStudentReportData(student_tz, klass_id, user_id) {
-    const [student, klass, reports, approved_abs_count, grade_names_dict] = await Promise.all([
+    const [student, klass, reports, approved_abs_count, att_grade_effect, grade_names_dict] = await Promise.all([
         new Student().where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         klass_id && new Klass().where({ user_id, key: klass_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         getAttReportsForStudentReport(user_id, student_tz, klass_id),
         getApprovedAbsTotalCount(user_id, student_tz, klass_id),
+        getAttGradeEffect(user_id),
         getGradeNameDict(user_id),
     ])
 
-    return { student, klass, reports, approved_abs_count, grade_names_dict }
+    return { student, klass, reports, approved_abs_count, att_grade_effect, grade_names_dict }
 }
 
 async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
@@ -123,6 +124,14 @@ async function getApprovedAbsTotalCount(user_id, student_tz, klass_id) {
         .fetchAll()
         .then(res => res.toJSON())
         .then(res => res[0])
+}
+
+function getAttGradeEffect(user_id) {
+    return new AttGradeEffect()
+        .where({ user_id })
+        .orderBy('percents', 'ASC')
+        .fetchAll()
+        .then(res => res.toJSON());
 }
 
 function getGradeNameDict(user_id) {
