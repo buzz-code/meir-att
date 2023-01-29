@@ -98,7 +98,9 @@
                                                 100,
                                                 report.grade + (
                                                     att_grade_effect?.[
-                                                        att_grade_effect?.findIndex(item => item.percents > report.grade) - 1
+                                                        att_grade_effect?.findIndex(item => (
+                                                            item.percents > Math.round(((report.lessons - report.abs_count) / report.lessons) * 100)
+                                                        )) - 1
                                                     ]?.effect
                                                     ?? 
                                                     0
