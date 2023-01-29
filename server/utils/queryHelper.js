@@ -97,6 +97,7 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
                 .avg({
                     grade: 'grade',
                 })
+                .orderBy('lesson_id', 'asc')
         })
         .fetchAll()
         .then(res => res.toJSON())
