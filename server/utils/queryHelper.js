@@ -85,7 +85,7 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
         .query(qb => {
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
-                .groupBy('lessons.name', 'teachers.name')
+                .groupBy('lessons.name', 'lesson_id', 'teachers.name')
                 .select({
                     lesson_name: 'lessons.name',
                     teacher_name: 'teachers.name',
