@@ -59,16 +59,16 @@ export async function getDiaryDataByGroupId(group_id) {
 }
 
 export async function getStudentReportData(student_tz, klass_id, user_id) {
-    const [student, klass, reports, approved_abs_count, att_grade_effect, grade_names_dict] = await Promise.all([
+    const [student, klass, reports, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
         new Student().where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         klass_id && new Klass().where({ user_id, key: klass_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         getAttReportsForStudentReport(user_id, student_tz, klass_id),
         getApprovedAbsTotalCount(user_id, student_tz, klass_id),
         getAttGradeEffect(user_id),
-        getGradeNameDict(user_id),
+        getGradeNames(user_id),
     ])
 
-    return { student, klass, reports, approved_abs_count, att_grade_effect, grade_names_dict }
+    return { student, klass, reports, approved_abs_count, att_grade_effect, grade_names }
 }
 
 async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
@@ -135,13 +135,12 @@ function getAttGradeEffect(user_id) {
         .then(res => res.toJSON());
 }
 
-function getGradeNameDict(user_id) {
+function getGradeNames(user_id) {
     return new GradeName()
         .where({ user_id })
+        .orderBy('key', 'DESC')
         .fetchAll()
-        .then(res => res.toJSON())
-        .then(res => res.map(item => [item.key, item.name]))
-        .then(Object.fromEntries);
+        .then(res => res.toJSON());
 }
 
 function getTextByUserIdAndName(user_id, name) {

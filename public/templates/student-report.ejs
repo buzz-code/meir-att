@@ -88,30 +88,27 @@
                         <tr>
                             <td class="full-cell"><%= report.lesson_name %></td>
                             <td class="full-cell"><%= report.teacher_name %></td>
+
+                            <% var att_percents = Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %> 
+                            
                             <% if (reportParams.grades) { %>
                                 <td class="full-cell">
                                 <% if (report.grade) { %>
-                                    <% if (grade_names_dict && grade_names_dict[report.grade]) { %>
-                                        <%= grade_names_dict[report.grade] %>
-                                    <% } else { %>
-                                        <%= Math.min(
-                                                100,
-                                                report.grade + (
-                                                    att_grade_effect?.find(item => (
-                                                        item.percents <= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100)
-                                                    ))?.effect
-                                                    ?? 
-                                                    0
-                                                )
-                                            )
-                                        %>%
-                                    <% } %>
+                                    <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0 %> 
+                                    <% var affected_grade = Math.min(100, report.grade + grade_effect) %> 
+                                    <% var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name %> 
+
+                                    <% if (matching_grade_name) { %> 
+                                        <%= matching_grade_name %>
+                                    <% } else { %> 
+                                        <%= affected_grade %>%
+                                    <% } %> 
                                 <% } else { %>
                                     &nbsp;
                                 <% } %>
                                 </td>
                             <% } %>
-                            <td class="full-cell"><%= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %>%</td>
+                            <td class="full-cell"><%= att_percents %>%</td>
                             </tr>
                     <% } %>
                 <% }) %>
