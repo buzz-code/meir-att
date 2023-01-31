@@ -130,7 +130,7 @@ async function getApprovedAbsTotalCount(user_id, student_tz, klass_id) {
 function getAttGradeEffect(user_id) {
     return new AttGradeEffect()
         .where({ user_id })
-        .orderBy('percents', 'ASC')
+        .orderBy('percents', 'DESC')
         .fetchAll()
         .then(res => res.toJSON());
 }

@@ -97,11 +97,9 @@
                                         <%= Math.min(
                                                 100,
                                                 report.grade + (
-                                                    att_grade_effect?.[
-                                                        att_grade_effect?.findIndex(item => (
-                                                            item.percents > Math.round(((report.lessons - report.abs_count) / report.lessons) * 100)
-                                                        )) - 1
-                                                    ]?.effect
+                                                    att_grade_effect?.find(item => (
+                                                        item.percents <= Math.round(((report.lessons - report.abs_count) / report.lessons) * 100)
+                                                    ))?.effect
                                                     ?? 
                                                     0
                                                 )
