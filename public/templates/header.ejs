@@ -1,8 +1,4 @@
 <style>
-    img {
-        width: 60%;
-        margin: 0 20%;
-    }
     small {
         position: absolute;
         right: 1rem;
@@ -15,6 +11,6 @@
     }
 </style>
 
-<img src="<%= img %>" />
+<%- include('image', { img }); %>
 <small>בס"ד</small>
 <h2><%= title %></h2>

@@ -1,0 +1,10 @@
+<% if (img) { %>
+    <% var innerWidth = locals.width ?? '80%' %> 
+    <style>
+        img {
+            width: <%= innerWidth %>;
+            margin: 0 calc((100% - <%= innerWidth %>) / 2);
+        }
+    </style>
+    <img src="<%= img %>" />
+<% } %>
