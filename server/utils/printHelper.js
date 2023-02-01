@@ -105,6 +105,7 @@ export async function getStudentReportStream(student_tz, klass_id, user_id, repo
     const templatePath = path.join(templatesDir, "student-report.ejs");
     const templateData = await getStudentReportData(student_tz, klass_id, user_id);
     templateData.reportParams = reportParams;
+    templateData.footerImage = await loadFileData('image', ['img', `user-${user_id}-end.png`]);
     const userHeaderImage = getStudentReportHeader(user_id);
     await addMetadataToTemplateData(templateData, 'סיכום נוכחות', null, false, userHeaderImage);
     const html = await renderEjsTemplate(templatePath, templateData);
