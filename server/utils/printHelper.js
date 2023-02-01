@@ -33,6 +33,14 @@ const getMonthName = (month) => {
     }
 }
 
+const loadFileData = async (type, pathArr) => {
+    const filePath = path.join(constant.assetsDir, ...pathArr);
+    if (!fs.existsSync(filePath)) {
+        return '';
+    }
+    return `data:${type};base64,${await fs.promises.readFile(filePath, { encoding: 'base64' })}`;
+}
+
 const addMetadataToTemplateData = async (templateData, title, diaryDate = null, isWithDate = true, headerUrl = 'header.jpg') => {
     if (isWithDate) {
         const heDate = new hebcal.HDate(diaryDate ? new Date(diaryDate) : new Date());
@@ -40,8 +48,8 @@ const addMetadataToTemplateData = async (templateData, title, diaryDate = null, 
     } else {
         templateData.title = title;
     }
-    templateData.font = 'data:font/truetype;base64,' + await fs.promises.readFile(path.join(constant.assetsDir, 'fonts', 'ELEGANTIBOLD.TTF'), { encoding: 'base64' });
-    templateData.img = 'data:image;base64,' + await fs.promises.readFile(path.join(constant.assetsDir, 'img', headerUrl), { encoding: 'base64' });
+    templateData.font = await loadFileData('font/truetype', ['fonts', 'ELEGANTIBOLD.TTF']);
+    templateData.img = await loadFileData('image', ['img', headerUrl]);
 }
 
 export async function getDiaryStream(groupId, diaryDate) {
