@@ -58,6 +58,9 @@ export async function handleEmail(req, res, ctrl) {
             }
             const report_date = new Date().toISOString().substr(0, 10);
             body.forEach(item => {
+                if(!item.how_many_lessons || item.how_many_lessons === '0') {
+                    throw new Error('מספר השעורים 0 אי אפשר לקלוט את הקובץ');
+                }
                 item.user_id = req.query.userId;
                 item.report_date = report_date;
                 item.sheet_name = sheetName;
