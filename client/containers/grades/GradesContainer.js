@@ -31,6 +31,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
     columnOrder: 'lessons.name',
     ...getPropsForAutoComplete('lesson_id', lessons, 'key'),
   },
+  { field: 'lesson_id', title: 'קוד שיעור' },
   { field: 'report_date', title: 'תאריך הדיווח', type: 'date' },
   { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
   { field: 'grade', title: 'ציון', type: 'numeric' },
