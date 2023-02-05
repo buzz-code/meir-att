@@ -91,7 +91,7 @@
                     <th>אחוז נוכחות</th>
                 </tr>
                 <% reports.forEach((report, index) => { %>
-                    <% if (!reportParams.forceGrades || (report.grade != undefined || report.grade != null)) { %>
+                    <% if (!reportParams.forceGrades || (report.grade != undefined && report.grade != null)) { %>
                         <tr>
                             <td class="full-cell"><%= report.lesson_name %></td>
                             <td class="full-cell"><%= report.teacher_name %></td>
@@ -100,7 +100,7 @@
                             
                             <% if (reportParams.grades) { %>
                                 <td class="full-cell">
-                                <% if (report.grade == undefined || report.grade == null) { %>
+                                <% if (report.grade != undefined && report.grade != null) { %>
                                     <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0 %> 
                                     <% var isOriginalGrade = report.grade > 100 || report.grade == 0 %>
                                     <% var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect) %> 
