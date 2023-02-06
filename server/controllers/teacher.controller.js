@@ -53,7 +53,7 @@ export function getFindAllQuery(user_id, filters) {
                 })
                     .andOn(bookshelf.knex.raw('grades.report_date >= ?', startDate))
                     .andOn(bookshelf.knex.raw('grades.report_date <= ?', endDate))
-                    .andOn(bookshelf.knex.raw('grades.sheet_name like ?', `%${sheetName}%`))
+                    .andOn(bookshelf.knex.raw(`COALESCE(grades.sheet_name, '') like ?`, `%${sheetName}%`))
             })
         });
 
