@@ -1,6 +1,8 @@
 import moment from "moment";
 import bookshelf from '../../common-modules/server/config/bookshelf';
+import { createModel } from "../../common-modules/server/utils/models";
 import { Klass, Teacher, User, StudentKlass, Lesson, Group, AttReport, Grade, Text, Student, KnownAbsence, AttReportAndGrade, GradeName, AttGradeEffect } from "../models";
+const student_base_klass_model = createModel('student_base_klass')
 
 export function getUserByPhone(phone_number) {
     return new User().where({ phone_number })
@@ -59,8 +61,9 @@ export async function getDiaryDataByGroupId(group_id) {
 }
 
 export async function getStudentReportData(student_tz, klass_id, user_id) {
-    const [student, klass, reports, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
+    const [student, student_base_klass, klass, reports, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
         new Student().where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
+        student_base_klass_model.where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         klass_id && new Klass().where({ user_id, key: klass_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         getAttReportsForStudentReport(user_id, student_tz, klass_id),
         getApprovedAbsTotalCount(user_id, student_tz, klass_id),
@@ -68,7 +71,7 @@ export async function getStudentReportData(student_tz, klass_id, user_id) {
         getGradeNames(user_id),
     ])
 
-    return { student, klass, reports, approved_abs_count, att_grade_effect, grade_names }
+    return { student, student_base_klass, klass, reports, approved_abs_count, att_grade_effect, grade_names }
 }
 
 async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
