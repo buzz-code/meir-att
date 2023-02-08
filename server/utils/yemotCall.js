@@ -252,7 +252,7 @@ export class YemotCall extends CallBase {
             } else if (this.params[field] == '*6' || this.params.sideMenu == '6') {
                 index++;
                 return true;
-            } else {
+            } else if (this.params[field] == '*') {
                 this.params[field] = '0';
             }
             return false;
