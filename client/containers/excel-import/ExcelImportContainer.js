@@ -11,7 +11,7 @@ const supportedEntities = [
     title: titles.TEACHERS,
     columns: ['tz', 'name', 'phone', 'phone2', 'email'],
   },
-  { value: entities.STUDENTS, title: titles.STUDENTS, columns: ['tz', 'name'] },
+  { value: entities.STUDENTS, title: titles.STUDENTS, columns: ['tz', 'name', 'comment'] },
   {
     value: entities.LESSONS,
     title: titles.LESSONS,

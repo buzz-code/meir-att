@@ -5,10 +5,12 @@ import Table from '../../../common-modules/client/components/table/Table';
 const getColumns = () => [
   { field: 'tz', title: 'תעודת זהות' },
   { field: 'name', title: 'שם' },
+  { field: 'comment', title: 'הערה לתעודה' },
 ];
 const getFilters = () => [
   { field: 'tz', label: 'תעודת זהות', type: 'text', operator: 'like' },
   { field: 'name', label: 'שם', type: 'text', operator: 'like' },
+  { field: 'comment', label: 'הערה לתעודה', type: 'text', operator: 'like' },
 ];
 
 const StudentsContainer = ({ entity, title }) => {
