@@ -70,6 +70,7 @@ export async function reportByKlassType(req, res) {
         qb.groupBy('students.id')
         qb.select({
             student_tz: 'students.tz',
+            student_comment: 'students.comment',
             klasses_1: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id in (' + klassTypes[1].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),
             klasses_2: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id in (' + klassTypes[2].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),
             klasses_3: bookshelf.knex.raw('GROUP_CONCAT(if(klasses.klass_type_id in (' + klassTypes[3].join(', ') + '), klasses.name, null) SEPARATOR ", ")'),

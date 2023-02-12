@@ -13,6 +13,7 @@ const getColumns = ({ students, klasses }) => [
     columnOrder: 'students.name',
     ...getPropsForAutoComplete('student_tz', students, 'tz'),
   },
+  { field: 'student_comment', title: 'הערה לתלמידה', editable: 'never' },
   { field: 'klasses_1', title: 'כיתת אם' },
   { field: 'klasses_2', title: 'מסלול' },
   { field: 'klasses_3', title: 'התמחות' },
