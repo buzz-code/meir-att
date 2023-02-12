@@ -1,4 +1,4 @@
-import { AttReport, Lesson, Student, Teacher, Klass, User, AttReportWithKnownAbsences } from '../models';
+import { AttReport, Lesson, Student, Teacher, Klass, User, AttReportWithKnownAbsences, AttReportAndGrade } from '../models';
 import { getDataToSave, getListFromTable } from '../../common-modules/server/utils/common';
 import { applyFilters, fetchPage, fetchPagePromise } from '../../common-modules/server/controllers/generic.controller';
 import { getAndParseExcelEmailV2WithResponse } from '../../common-modules/server/utils/email';
@@ -261,18 +261,18 @@ export async function getTeacherSalaryReport(req, res) {
 }
 
 export async function getStudentPercentsReport(req, res) {
-    const dbQuery = new AttReport()
-        .where({ 'att_reports.user_id': req.currentUser.id })
+    const dbQuery = new AttReportAndGrade()
+        .where({ 'att_reports_and_grades.user_id': req.currentUser.id })
         .query(qb => {
-            qb.leftJoin('students', { 'students.tz': 'att_reports.student_tz', 'students.user_id': 'att_reports.user_id' })
-            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports.teacher_id', 'teachers.user_id': 'att_reports.user_id' })
-            qb.leftJoin('klasses', { 'klasses.key': 'att_reports.klass_id', 'klasses.user_id': 'att_reports.user_id' })
-            qb.leftJoin('lessons', { 'lessons.key': 'att_reports.lesson_id', 'lessons.user_id': 'att_reports.user_id' })
-            qb.leftJoin('known_absences', { 'known_absences.lesson_id': 'att_reports.lesson_id', 'known_absences.user_id': 'att_reports.user_id', 'known_absences.student_tz': 'att_reports.student_tz', 'known_absences.report_month': 'att_reports.sheet_name' })
+            qb.leftJoin('students', { 'students.tz': 'att_reports_and_grades.student_tz', 'students.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('klasses', { 'klasses.key': 'att_reports_and_grades.klass_id', 'klasses.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
+            qb.leftJoin('known_absences', { 'known_absences.lesson_id': 'att_reports_and_grades.lesson_id', 'known_absences.user_id': 'att_reports_and_grades.user_id', 'known_absences.student_tz': 'att_reports_and_grades.student_tz' })
         });
     applyFilters(dbQuery, req.query.filters);
 
-    const groupByColumns = ['att_reports.student_tz', 'students.name', 'att_reports.teacher_id', 'teachers.name', 'att_reports.klass_id', 'klasses.name', 'att_reports.lesson_id', 'lessons.name'];
+    const groupByColumns = ['att_reports_and_grades.student_tz', 'students.name', 'att_reports_and_grades.teacher_id', 'teachers.name', 'att_reports_and_grades.klass_id', 'klasses.name', 'att_reports_and_grades.lesson_id', 'lessons.name'];
     const countQuery = dbQuery.clone().query()
         .countDistinct({ count: groupByColumns })
         .then(res => res[0].count);
@@ -285,6 +285,9 @@ export async function getStudentPercentsReport(req, res) {
             abs_count: 'abs_count',
             approved_abs_count: 'approved_abs_count',
             absnce_count: 'absnce_count',
+        })
+        qb.avg({
+            grade: 'grade',
         })
         qb.select({
             percents: bookshelf.knex.raw('sum(abs_count) / sum(how_many_lessons)'),

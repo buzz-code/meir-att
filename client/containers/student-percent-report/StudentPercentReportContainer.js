@@ -46,6 +46,12 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
   // { field: 'sheet_name', title: 'חודש דיווח' },
   // { field: 'absnce_count', title: 'חיסורים מאושרים', editable: 'never' },
   { field: 'percents_formatted', title: 'אחוזים', columnOrder: 'percents' },
+  {
+    field: 'grade',
+    title: 'ציון',
+    type: 'numeric',
+    ...getPropsForHideZeroValues('grade'),
+  },
 ];
 const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },
@@ -81,11 +87,21 @@ const getFilters = ({ students, teachers, klasses, lessons }) => [
     list: lessons,
     idField: 'key',
   },
-  { field: 'att_reports.report_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
-  { field: 'att_reports.report_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
+  {
+    field: 'att_reports_and_grades.report_date',
+    label: 'מתאריך',
+    type: 'date',
+    operator: 'date-before',
+  },
+  {
+    field: 'att_reports_and_grades.report_date',
+    label: 'עד תאריך',
+    type: 'date',
+    operator: 'date-after',
+  },
   // { field: 'abs_count', label: 'חיסורים', type: 'text', operator: 'like' },
   // { field: 'approved_abs_count', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
-  { field: 'sheet_name', label: 'חודש דיווח', type: 'text', operator: 'like' },
+  // { field: 'sheet_name', label: 'חודש דיווח', type: 'text', operator: 'like' },
   // { field: 'comments', label: 'הערות', type: 'text', operator: 'like' },
 ];
 
