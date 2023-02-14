@@ -53,6 +53,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
     ...getPropsForHideZeroValues('grade'),
   },
   { field: 'att_grade_effect', title: 'קשר נוכחות ציון' },
+  { field: 'grade_affected', title: 'ציון סופי' },
 ];
 const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },
