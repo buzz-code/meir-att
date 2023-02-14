@@ -290,8 +290,9 @@ export async function getStudentPercentsReport(req, res) {
             grade: 'grade',
         })
         qb.select({
-            percents: bookshelf.knex.raw('sum(abs_count) / sum(how_many_lessons)'),
-            percents_formatted: bookshelf.knex.raw('IF(sum(abs_count) > 0, CONCAT(FORMAT(sum(abs_count) / sum(how_many_lessons) * 100, 0), \'%\'), \'\')'),
+            percents: bookshelf.knex.raw('sum(abs_count) / GREATEST(sum(how_many_lessons), 1)'),
+            percents_formatted: bookshelf.knex.raw('IF(sum(abs_count) > 0, CONCAT(FORMAT(sum(abs_count) / GREATEST(sum(how_many_lessons), 1) * 100, 0), \'%\'), \'\')'),
+            att_grade_effect: bookshelf.knex.raw('att_grade_func(att_reports_and_grades.user_id, FORMAT(sum(abs_count) / GREATEST(sum(how_many_lessons), 1) * 100, 0))')
         })
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
