@@ -22,12 +22,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
     columnOrder: 'teachers.name',
     ...getPropsForAutoComplete('teacher_id', teachers, 'tz'),
   },
-  {
-    field: 'klass_id',
-    title: 'כיתה',
-    columnOrder: 'klasses.name',
-    ...getPropsForAutoComplete('klass_id', klasses, 'key'),
-  },
+  { field: 'klasses_name', title: 'כיתות' },
   {
     field: 'lesson_id',
     title: 'שיעור',
