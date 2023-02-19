@@ -116,26 +116,31 @@
 
                             <% var att_percents = Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %> 
                             
-                            <% if (reportParams.grades) { %>
-                                <td class="full-cell">
-                                <% if (report.grade != undefined && report.grade != null) { %>
-                                    <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0 %> 
-                                    <% var isOriginalGrade = report.grade > 100 || report.grade == 0 %>
-                                    <% var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect) %> 
-                                    <% var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name %> 
+                            <% if (report.lessons * 2 == report.abs_count) { %>
+                                <td class="full-cell">&nbsp;</td>
+                                <td class="full-cell"><%= report.grade %></td>
+                            <% } else { %>
+                                <% if (reportParams.grades) { %>
+                                    <td class="full-cell">
+                                    <% if (report.grade != undefined && report.grade != null) { %>
+                                        <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0 %> 
+                                        <% var isOriginalGrade = report.grade > 100 || report.grade == 0 %>
+                                        <% var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect) %> 
+                                        <% var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name %> 
 
-                                    <% if (matching_grade_name) { %> 
-                                        <%= matching_grade_name %>
-                                    <% } else { %> 
-                                        <%= affected_grade %>%
-                                    <% } %> 
-                                <% } else { %>
-                                    &nbsp;
+                                        <% if (matching_grade_name) { %> 
+                                            <%= matching_grade_name %>
+                                        <% } else { %> 
+                                            <%= affected_grade %>%
+                                        <% } %> 
+                                    <% } else { %>
+                                        &nbsp;
+                                    <% } %>
+                                    </td>
                                 <% } %>
-                                </td>
+                                <td class="full-cell"><%= att_percents %>%</td>
                             <% } %>
-                            <td class="full-cell"><%= att_percents %>%</td>
-                            </tr>
+                        </tr>
                     <% } %>
                 <% }) %>
                 <% if (!reportParams.hideAbsTotal) { %>
@@ -146,8 +151,9 @@
                             <th>&nbsp;</th>
                         <% } %>
 
-                        <% var total_lesson_count = reports.reduce((a, b) => a + b.lessons, 0) %> 
-                        <% var total_abs_count = reports.reduce((a, b) => a + b.abs_count, 0) %> 
+                        <% var reportsNoSpecial = reports.filter(item => item.lessons * 2 != item.abs_count) %>
+                        <% var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessons, 0) %> 
+                        <% var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.abs_count, 0) %> 
                         <% var total_att_count = total_lesson_count - total_abs_count %> 
 
                         <th>
