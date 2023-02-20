@@ -117,8 +117,8 @@
                             <% var att_percents = Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %> 
                             
                             <% if (report.lessons * 2 == report.abs_count) { %>
-                                <td class="full-cell">&nbsp;</td>
                                 <td class="full-cell"><%= report.grade %></td>
+                                <td class="full-cell">&nbsp;</td>
                             <% } else { %>
                                 <% if (reportParams.grades) { %>
                                     <td class="full-cell">
