@@ -89,6 +89,9 @@ export async function downloadStudentReport(req, res) {
         if ([1].includes(req.currentUser.id)) {
             reportParams.forceGrades = true;
         }
+        if ([3].includes(req.currentUser.id)) {
+            reportParams.forceAtt = true;
+        }
         if ([1].includes(req.currentUser.id)) {
             reportParams.hideAbsTotal = true;
         }
