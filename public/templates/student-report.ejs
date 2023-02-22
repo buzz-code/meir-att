@@ -110,7 +110,7 @@
                 </tr>
                 <% reports.forEach((report, index) => { %>
                     <% if (
-                        (!reportParams.forceGrades || (report.grade != undefined && report.grade != null))
+                        (!reportParams.forceGrades || (report.grade != undefined && report.grade != null)) &&
                         (!reportParams.forceAtt || (report.lessons))
                     ) { %>
                         <tr>
