@@ -70,7 +70,9 @@ export function getFindAllQuery(user_id, filters) {
             teacher_name: 'teachers.name',
             teacher_report_type: 'teachers.report_type',
             teacher_email: 'teachers.email',
+            lesson_id: 'lessons.id',
             lesson_name: 'lessons.name',
+            klass_id: 'klasses.id',
             klass_name: 'klasses.name',
             is_report_sent: bookshelf.knex.raw('if(count(att_reports.id) > 0, 1, 0)'),
             is_grades_sent: bookshelf.knex.raw('if(count(grades.id) > 0, 1, 0)'),
@@ -84,13 +86,26 @@ export async function teachersWithReportStatus(req, res) {
     fetchPage({ dbQuery, countQuery }, req.query, res);
 }
 
-async function getEmailData(req, filters, tzs) {
-    if (tzs) {
-        filters = [{
-            field: 'teachers.tz',
-            operator: 'in',
-            value: tzs,
-        }]
+async function getEmailData(req, filters, specific) {
+    if (specific) {
+        filters = [
+            {
+                field: 'teachers.tz',
+                operator: 'in',
+                value: specific.map(item => item.teacher_tz),
+            },
+            {
+                field: 'lessons.id',
+                operator: 'in',
+                value: specific.map(item => item.lesson_id),
+            },
+            // I don't know why but un-commenting this cause an error
+            // {
+            //     field: 'klasses.id',
+            //     operator: 'in',
+            //     value: specific.map(item => item.klass_id),
+            // },
+        ]
     }
     const { dbQuery, countQuery } = getFindAllQuery(req.currentUser.id, JSON.stringify(filters));
     const { data } = await fetchPagePromise({ dbQuery, countQuery }, { page: 0, pageSize: 1000 });
@@ -98,8 +113,8 @@ async function getEmailData(req, filters, tzs) {
 }
 
 export async function sendEmailToAllTeachers(req, res) {
-    const { body: { filters, message, tzs } } = req;
-    const data = await getEmailData(req, filters, tzs);
+    const { body: { filters, message, specific } } = req;
+    const data = await getEmailData(req, filters, specific);
 
     const teachersToSend = data
         .filter(

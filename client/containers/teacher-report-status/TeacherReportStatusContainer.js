@@ -87,7 +87,13 @@ const TeacherReportStatusContainer = ({ entity, title }) => {
         crudAction.customHttpRequest(entity, 'POST', 'send-email-to-all', {
           filters: conditions,
           message,
-          tzs: selectedRows?.map && selectedRows.map((item) => item.teacher_tz),
+          specific:
+            selectedRows?.map &&
+            selectedRows.map(({ teacher_tz, lesson_id, klass_id }) => ({
+              teacher_tz,
+              lesson_id,
+              klass_id,
+            })),
         })
       );
     },
