@@ -57,14 +57,14 @@ const getFilters = ({ students, teachers, klasses, lessons }) => [
     list: teachers,
     idField: 'tz',
   },
-  // {
-  //   field: 'klasses.key',
-  //   label: 'כיתה',
-  //   type: 'list',
-  //   operator: 'eq',
-  //   list: klasses,
-  //   idField: 'key',
-  // },
+  {
+    field: 'klasses.key',
+    label: 'כיתה',
+    type: 'list',
+    operator: 'eq',
+    list: klasses,
+    idField: 'key',
+  },
   {
     field: 'lessons.key',
     label: 'שיעור',
