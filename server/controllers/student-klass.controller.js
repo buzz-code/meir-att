@@ -95,6 +95,9 @@ export async function downloadStudentReport(req, res) {
         if ([1].includes(req.currentUser.id)) {
             reportParams.hideAbsTotal = true;
         }
+        if ([5].includes(req.currentUser.id)) {
+            reportParams.groupByKlass = true;
+        }
         const { body: { ids, klass, personalNote } } = req;
         reportParams.personalNote = personalNote;
         const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, reportParams);
