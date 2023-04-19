@@ -82,10 +82,10 @@
         <% if (reportParams.groupByKlass) { %>
             <% var klasses = {} %>
             <% reports.forEach(item => {
-                klasses[item.klass_name] = klasses[item.klass_name] || { name: item.klass_name, reports: [] }
+                klasses[item.klass_name] = klasses[item.klass_name] || { name: item.klass_name, order: item.klass_type_id, reports: [] }
                 klasses[item.klass_name].reports.push(item)
             }) %>
-            <% reportDataArr = Object.values(klasses).sort((a, b) => a.name?.trim()?.localeCompare(b.name?.trim())) %>
+            <% reportDataArr = Object.values(klasses).sort((a, b) => a.order - b.order) %>
         <% } %>
 
         <div class="container">
