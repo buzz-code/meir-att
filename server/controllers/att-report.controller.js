@@ -240,6 +240,7 @@ export async function reportWithKnownAbsences(req, res) {
             known_absences_2: bookshelf.knex.raw('SUM(if(absnce_code = 2, absnce_count, null))'),
         })
         qb.sum({
+            how_many_lessons: 'how_many_lessons',
             abs_count: 'abs_count',
             approved_abs_count: 'approved_abs_count',
         })

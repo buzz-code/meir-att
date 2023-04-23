@@ -15,6 +15,7 @@ const getColumns = ({ students }) => [
   },
   { field: 'student_base_klass', title: 'כיתת בסיס' },
   { field: 'klass_name', title: 'כיתה' },
+  { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
   { field: 'abs_count', title: 'חיסורים', type: 'numeric' },
   // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
   { field: 'known_absences_1', title: 'חיסורים שאושרו עם קוד 1', type: 'numeric' },
