@@ -32,8 +32,8 @@ const getFilters = ({ students, klasses }) => [
     idField: 'tz',
   },
   {
-    field: 'student_base_klass.student_base_klass',
-    label: 'כיתת בסיס',
+    field: 'klasses.key',
+    label: 'כיתה',
     type: 'list',
     operator: 'eq',
     list: klasses,
