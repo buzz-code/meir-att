@@ -21,7 +21,7 @@ const getColumns = ({ students }) => [
   { field: 'known_absences_1', title: 'חיסורים שאושרו עם קוד 1', type: 'numeric' },
   { field: 'known_absences_2', title: 'חיסורים שאושרו עם קוד 2', type: 'numeric' },
 ];
-const getFilters = ({ students }) => [
+const getFilters = ({ students, klasses }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },
   {
     field: 'students.tz',
@@ -31,7 +31,14 @@ const getFilters = ({ students }) => [
     list: students,
     idField: 'tz',
   },
-  { field: 'student_base_klass.student_base_klass', label: 'כיתה', type: 'text', operator: 'like' },
+  {
+    field: 'student_base_klass.student_base_klass',
+    label: 'כיתת בסיס',
+    type: 'list',
+    operator: 'eq',
+    list: klasses,
+    idField: 'key',
+  },
   { field: 'report_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
   { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
   { field: 'abs_count', label: 'חיסורים', type: 'text', operator: 'like' },
