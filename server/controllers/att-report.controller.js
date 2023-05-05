@@ -244,6 +244,17 @@ export async function reportWithKnownAbsences(req, res) {
             abs_count: 'abs_count',
             approved_abs_count: 'approved_abs_count',
         })
+        
+        const abs_ratio = 'sum(abs_count) / GREATEST(sum(how_many_lessons), 1)';
+        const getPercents = sql => `FORMAT(${sql} * 100, 0)`;
+        qb.select({
+            percents: bookshelf.knex.raw(abs_ratio),
+            percents_formatted: bookshelf.knex.raw(`IF(
+                    sum(abs_count) > 0, 
+                    CONCAT(${getPercents(abs_ratio)}, \'%\'), 
+                    \'\'
+                )`),
+        })
     });
     fetchPage({ dbQuery, countQuery }, req.query, res);
 }

@@ -42,6 +42,7 @@ const getFilters = ({ students, klasses }) => [
   { field: 'report_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
   { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
   { field: 'abs_count', label: 'חיסורים', type: 'text', operator: 'like' },
+  { field: 'percents_formatted', title: 'אחוזים', columnOrder: 'percents' },
   // { field: 'approved_abs_count', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
   { field: 'known_absences_1', label: 'חיסורים שאושרו עם קוד 1', type: 'text', operator: 'like' },
   { field: 'known_absences_2', label: 'חיסורים שאושרו עם קוד 2', type: 'text', operator: 'like' },
