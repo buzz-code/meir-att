@@ -256,7 +256,7 @@ export async function reportWithKnownAbsences(req, res) {
                 )`),
             percents_wo_known: bookshelf.knex.raw(abs_wo_known_ratio),
             percents_wo_known_formatted: bookshelf.knex.raw(`IF(
-                    sum(abs_wo_known_ratio) > 0, 
+                    (sum(abs_count) - sum(absnce_count)) > 0, 
                     CONCAT(${getPercents(abs_wo_known_ratio)}, \'%\'), 
                     \'\'
                 )`),
