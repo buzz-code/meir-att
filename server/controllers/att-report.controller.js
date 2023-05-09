@@ -236,8 +236,7 @@ export async function reportWithKnownAbsences(req, res) {
             student_name: 'students.name',
             klass_name: bookshelf.knex.raw('coalesce(klasses.name, "")'),
             student_base_klass: bookshelf.knex.raw('GROUP_CONCAT(distinct student_base_klass.student_base_klass SEPARATOR ", ")'),
-            known_absences_1: bookshelf.knex.raw('SUM(if(absnce_code = 1, absnce_count, null))'),
-            known_absences_2: bookshelf.knex.raw('SUM(if(absnce_code = 2, absnce_count, null))'),
+            known_absences: bookshelf.knex.raw('SUM(absnce_count)'),
         })
         qb.sum({
             how_many_lessons: 'how_many_lessons',
@@ -246,12 +245,19 @@ export async function reportWithKnownAbsences(req, res) {
         })
         
         const abs_ratio = 'sum(abs_count) / GREATEST(sum(how_many_lessons), 1)';
+        const abs_wo_known_ratio = '(sum(abs_count) - sum(absnce_count)) / GREATEST(sum(how_many_lessons), 1)';
         const getPercents = sql => `FORMAT(${sql} * 100, 0)`;
         qb.select({
             percents: bookshelf.knex.raw(abs_ratio),
             percents_formatted: bookshelf.knex.raw(`IF(
                     sum(abs_count) > 0, 
                     CONCAT(${getPercents(abs_ratio)}, \'%\'), 
+                    \'\'
+                )`),
+            percents_wo_known: bookshelf.knex.raw(abs_wo_known_ratio),
+            percents_wo_known_formatted: bookshelf.knex.raw(`IF(
+                    sum(abs_wo_known_ratio) > 0, 
+                    CONCAT(${getPercents(abs_wo_known_ratio)}, \'%\'), 
                     \'\'
                 )`),
         })

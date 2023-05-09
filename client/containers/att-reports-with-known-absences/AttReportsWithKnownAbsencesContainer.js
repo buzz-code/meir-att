@@ -18,9 +18,9 @@ const getColumns = ({ students }) => [
   { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
   { field: 'abs_count', title: 'חיסורים', type: 'numeric' },
   { field: 'percents_formatted', title: 'אחוזים', columnOrder: 'percents' },
+  { field: 'percents_wo_known_formatted', title: 'אחוזים בקיזוז חיסורים מאושרים', columnOrder: 'percents' },
   // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
-  { field: 'known_absences_1', title: 'חיסורים שאושרו עם קוד 1', type: 'numeric' },
-  { field: 'known_absences_2', title: 'חיסורים שאושרו עם קוד 2', type: 'numeric' },
+  { field: 'known_absences', title: 'חיסורים מאושרים', type: 'numeric' },
 ];
 const getFilters = ({ students, klasses }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },
@@ -44,8 +44,7 @@ const getFilters = ({ students, klasses }) => [
   { field: 'report_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
   { field: 'abs_count', label: 'חיסורים', type: 'text', operator: 'like' },
   // { field: 'approved_abs_count', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
-  { field: 'known_absences_1', label: 'חיסורים שאושרו עם קוד 1', type: 'text', operator: 'like' },
-  { field: 'known_absences_2', label: 'חיסורים שאושרו עם קוד 2', type: 'text', operator: 'like' },
+  { field: 'known_absences', label: 'חיסורים מאושרים', type: 'text', operator: 'like' },
 ];
 
 const AttReportsWithKnownAbsencesContainer = ({ entity, title }) => {
