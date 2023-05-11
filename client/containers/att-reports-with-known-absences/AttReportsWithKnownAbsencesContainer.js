@@ -18,9 +18,9 @@ const getColumns = ({ students }) => [
   { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
   { field: 'abs_count', title: 'חיסורים', type: 'numeric' },
   { field: 'percents_formatted', title: 'אחוזים', columnOrder: 'percents' },
-  { field: 'percents_wo_known_formatted', title: 'אחוזים בקיזוז חיסורים מאושרים', columnOrder: 'percents' },
   // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
   { field: 'known_absences', title: 'חיסורים מאושרים', type: 'numeric' },
+  { field: 'percents_wo_known_formatted', title: 'אחוזים בקיזוז חיסורים מאושרים', columnOrder: 'percents' },
 ];
 const getFilters = ({ students, klasses }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },
