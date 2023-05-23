@@ -290,7 +290,7 @@ export async function getStudentPercentsReport(req, res) {
         });
     applyFilters(dbQuery, req.query.filters);
 
-    const groupByColumns = ['att_reports_and_grades.student_tz', 'students.name', 'att_reports_and_grades.teacher_id', 'teachers.name', 'att_reports_and_grades.lesson_id', 'lessons.name'];
+    const groupByColumns = ['att_reports_and_grades.student_tz', 'students.name', 'att_reports_and_grades.teacher_id', 'teachers.name', 'att_reports_and_grades.lesson_id', 'lessons.name', 'lessons.key'];
     const countQuery = dbQuery.clone().query()
         .countDistinct({ count: groupByColumns })
         .then(res => res[0].count);
@@ -300,6 +300,7 @@ export async function getStudentPercentsReport(req, res) {
         qb.select(...groupByColumns)
         qb.select({
             klasses_name: bookshelf.knex.raw('GROUP_CONCAT(distinct klasses.name SEPARATOR ", ")'),
+            lessons_key: 'lessons.key',
         })
         qb.sum({
             how_many_lessons: 'how_many_lessons',
@@ -309,15 +310,17 @@ export async function getStudentPercentsReport(req, res) {
         })
         qb.avg({
             grade: 'grade',
+            known_absences: 'known_absences.absnce_count',
         })
-        const abs_ratio = 'sum(abs_count) / GREATEST(sum(how_many_lessons), 1)';
+        const abs_count = 'sum(abs_count) - avg(known_absences.absnce_count)'
+        const abs_ratio = `(${abs_count}) / GREATEST(sum(how_many_lessons), 1)`;
         const getPercents = sql => `FORMAT(${sql} * 100, 0)`;
         const att_percents = getPercents(`(1 - ${abs_ratio})`);
         const att_grade_effect = `att_grade_func(att_reports_and_grades.user_id, ${att_percents})`
         qb.select({
             percents: bookshelf.knex.raw(abs_ratio),
             percents_formatted: bookshelf.knex.raw(`IF(
-                    sum(abs_count) > 0, 
+                    ${abs_count} > 0, 
                     CONCAT(${getPercents(abs_ratio)}, \'%\'), 
                     \'\'
                 )`),

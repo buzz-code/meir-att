@@ -29,6 +29,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
     columnOrder: 'lessons.name',
     ...getPropsForAutoComplete('lesson_id', lessons, 'key'),
   },
+  { field: 'lessons_key', title: 'קוד שיעור', columnOrder: 'lessons.key' },
   // { field: 'report_date', title: 'תאריך הדיווח', type: 'date' },
   { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
   {
@@ -39,7 +40,7 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
   },
   // { field: 'approved_abs_count', title: 'חיסורים מאושרים', type: 'numeric' },
   // { field: 'sheet_name', title: 'חודש דיווח' },
-  // { field: 'absnce_count', title: 'חיסורים מאושרים', editable: 'never' },
+  { field: 'known_absences', title: 'חיסורים מאושרים', editable: 'never' },
   { field: 'percents_formatted', title: 'אחוזים', columnOrder: 'percents' },
   {
     field: 'grade',
