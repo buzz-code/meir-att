@@ -111,14 +111,17 @@ export async function getStudentReportStream(student_tz, klass_id, user_id, repo
     const html = await renderEjsTemplate(templatePath, templateData);
     const fileStream = await getPdfStreamFromHtml(html);
     const filename = 'דוח לתלמידה ' + templateData.student.name;
-    return { fileStream, filename };
+    return { fileStream, filename, templateData };
 }
 
 export async function getStudentReportMergedPdfStream(ids, klass_id, user_id, reportParams) {
     var merger = new PDFMerger();
+    let klass_name = null, students = [];
 
     for (const id of ids) {
-        const { fileStream, filename } = await getStudentReportStream(id, klass_id, user_id, reportParams);
+        const { fileStream, filename, templateData } = await getStudentReportStream(id, klass_id, user_id, reportParams);
+        klass_name = templateData.klass?.name;
+        students.push(templateData.student.name);
         const filePath = temp.path({ prefix: filename, suffix: '.pdf' });
         await fs.promises.writeFile(filePath, await streamToBuffer(fileStream));
         merger.add(filePath);
@@ -128,5 +131,7 @@ export async function getStudentReportMergedPdfStream(ids, klass_id, user_id, re
     await merger.save(tempPath);
     const fileStream = fs.createReadStream(tempPath);
 
-    return { fileStream, filename: 'דוחות' };
+    const filename = `דוחות ${klass_id ? 'לכיתה ' + klass_name : 'לתלמידות ' + students.join(', ')}`;
+
+    return { fileStream, filename };
 }
