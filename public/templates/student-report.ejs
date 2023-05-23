@@ -147,7 +147,7 @@
                                     <% if (reportParams.grades) { %>
                                         <td class="full-cell">
                                         <% if (report.grade != undefined && report.grade != null) { %>
-                                            <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0 %> 
+                                            <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count <= report.abs_count)?.effect ?? 0 %> 
                                             <% var isOriginalGrade = report.grade > 100 || report.grade == 0 %>
                                             <% var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect) %> 
                                             <% var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name %> 

@@ -4,10 +4,12 @@ import Table from '../../../common-modules/client/components/table/Table';
 
 const getColumns = () => [
   { field: 'percents', title: 'מעל אחוז', type: 'numeric' },
+  { field: 'count', title: 'מעל מספר', type: 'numeric' },
   { field: 'effect', title: 'השפעה', type: 'numeric' },
 ];
 const getFilters = () => [
   { field: 'percents', label: 'מעל אחוז', type: 'text', operator: 'like' },
+  { field: 'count', label: 'מעל מספר', type: 'text', operator: 'like' },
   { field: 'effect', label: 'השפעה', type: 'text', operator: 'like' },
 ];
 
