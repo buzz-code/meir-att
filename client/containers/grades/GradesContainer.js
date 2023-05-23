@@ -33,9 +33,10 @@ const getColumns = ({ students, teachers, klasses, lessons }) => [
   },
   { field: 'lesson_id', title: 'קוד שיעור' },
   { field: 'report_date', title: 'תאריך הדיווח', type: 'date' },
-  { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
+  // { field: 'how_many_lessons', title: 'מספר שיעורים', type: 'numeric' },
   { field: 'grade', title: 'ציון', type: 'numeric' },
   { field: 'comments', title: 'הערות' },
+  { field: 'half', title: 'מחצית' },
 ];
 const getFilters = ({ students, teachers, klasses, lessons }) => [
   { field: 'student_tz', label: 'תז תלמידה', type: 'text', operator: 'like' },

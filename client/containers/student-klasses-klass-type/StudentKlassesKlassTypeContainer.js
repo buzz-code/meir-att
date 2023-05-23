@@ -37,6 +37,7 @@ const getFilters = ({ students, klasses }) => [
     list: klasses,
     idField: 'key',
   },
+  { field: 'half', label: 'מחצית', type: 'text', operator: 'like' },
 ];
 
 const getActions = (handleDownloadStudentReport) => [
