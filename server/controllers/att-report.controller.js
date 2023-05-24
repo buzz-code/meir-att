@@ -290,7 +290,7 @@ export async function getStudentPercentsReport(req, res) {
         });
     applyFilters(dbQuery, req.query.filters);
 
-    const groupByColumns = ['att_reports_and_grades.student_tz', 'students.name', 'att_reports_and_grades.teacher_id', 'teachers.name', 'att_reports_and_grades.lesson_id', 'lessons.name', 'lessons.key'];
+    const groupByColumns = ['att_reports_and_grades.student_tz', 'students.name', 'att_reports_and_grades.teacher_id', 'teachers.name', 'att_reports_and_grades.lesson_id', 'lessons.name'];
     const countQuery = dbQuery.clone().query()
         .countDistinct({ count: groupByColumns })
         .then(res => res[0].count);
@@ -300,7 +300,7 @@ export async function getStudentPercentsReport(req, res) {
         qb.select(...groupByColumns)
         qb.select({
             klasses_name: bookshelf.knex.raw('GROUP_CONCAT(distinct klasses.name SEPARATOR ", ")'),
-            lessons_key: 'lessons.key',
+            lessons_key: bookshelf.knex.raw('GROUP_CONCAT(distinct lessons.key SEPARATOR ", ")'),
         })
         qb.sum({
             how_many_lessons: 'how_many_lessons',
