@@ -244,19 +244,22 @@ export async function reportWithKnownAbsences(req, res) {
             approved_abs_count: 'approved_abs_count',
         })
         
-        const abs_ratio = 'sum(abs_count) / GREATEST(sum(how_many_lessons), 1)';
-        const abs_wo_known_ratio = '(sum(abs_count) - sum(absnce_count)) / GREATEST(sum(how_many_lessons), 1)';
+        const lessons_sum = 'GREATEST(sum(how_many_lessons), 1)';
+        const abs_count_sum = 'sum(abs_count)';
+        const abs_ratio = `${abs_count_sum} / ${lessons_sum}`;
+        const abs_wo_known_sum = `(${abs_count_sum} - COALESCE(sum(absnce_count), 0))`;
+        const abs_wo_known_ratio = `${abs_wo_known_sum} / ${lessons_sum}`;
         const getPercents = sql => `FORMAT(${sql} * 100, 0)`;
         qb.select({
             percents: bookshelf.knex.raw(abs_ratio),
             percents_formatted: bookshelf.knex.raw(`IF(
-                    sum(abs_count) > 0, 
+                    ${abs_count_sum} > 0, 
                     CONCAT(${getPercents(abs_ratio)}, \'%\'), 
                     \'\'
                 )`),
             percents_wo_known: bookshelf.knex.raw(abs_wo_known_ratio),
             percents_wo_known_formatted: bookshelf.knex.raw(`IF(
-                    (sum(abs_count) - sum(absnce_count)) > 0, 
+                    ${abs_wo_known_sum} > 0, 
                     CONCAT(${getPercents(abs_wo_known_ratio)}, \'%\'), 
                     \'\'
                 )`),
@@ -312,7 +315,7 @@ export async function getStudentPercentsReport(req, res) {
             grade: 'grade',
             known_absences: 'known_absences.absnce_count',
         })
-        const abs_count = 'sum(abs_count) - avg(known_absences.absnce_count)'
+        const abs_count = 'sum(abs_count) - COALESCE(avg(known_absences.absnce_count), 0)'
         const abs_ratio = `(${abs_count}) / GREATEST(sum(how_many_lessons), 1)`;
         const getPercents = sql => `FORMAT(${sql} * 100, 0)`;
         const att_percents = getPercents(`(1 - ${abs_ratio})`);
