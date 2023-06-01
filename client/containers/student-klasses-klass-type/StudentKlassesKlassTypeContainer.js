@@ -37,7 +37,9 @@ const getFilters = ({ students, klasses }) => [
     list: klasses,
     idField: 'key',
   },
-  { field: 'half', label: 'מחצית', type: 'text', operator: 'like' },
+  { field: 'att_reports.report_date', label: 'מתאריך', type: 'date' },
+  { field: 'att_reports.report_date', label: 'עד תאריך', type: 'date' },
+  { field: 'att_reports.half', label: 'מחצית', type: 'text' },
 ];
 
 const getActions = (handleDownloadStudentReport) => [
@@ -67,6 +69,9 @@ const StudentKlassesKlassTypeontainer = ({ entity, title }) => {
           klass: conditions[2]?.value,
           ids: selectedRows.map((item) => item.student_tz),
           personalNote,
+          startDate: conditions[3]?.value,
+          endDate: conditions[4]?.value,
+          half: conditions[5]?.value,
         })
       );
     },

@@ -60,13 +60,13 @@ export async function getDiaryDataByGroupId(group_id) {
     return { group, students: students.sort((a, b) => a.name?.trim()?.localeCompare(b.name?.trim())) };
 }
 
-export async function getStudentReportData(student_tz, klass_id, user_id) {
+export async function getStudentReportData(student_tz, klass_id, user_id, filters) {
     const [student, student_base_klass, klass, reports, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
         new Student().where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         student_base_klass_model.where({ user_id, tz: student_tz }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
         klass_id && new Klass().where({ user_id, key: klass_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
-        getAttReportsForStudentReport(user_id, student_tz, klass_id),
-        getApprovedAbsTotalCount(user_id, student_tz, klass_id),
+        getAttReportsForStudentReport(user_id, student_tz, klass_id, filters),
+        getApprovedAbsTotalCount(user_id, student_tz, klass_id, filters),
         getAttGradeEffect(user_id),
         getGradeNames(user_id),
     ])
@@ -74,7 +74,7 @@ export async function getStudentReportData(student_tz, klass_id, user_id) {
     return { student, student_base_klass, klass, reports, approved_abs_count, att_grade_effect, grade_names }
 }
 
-async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
+async function getAttReportsForStudentReport(user_id, student_tz, klass_id, filters) {
     const reportsFilter = {
         'att_reports_and_grades.user_id': user_id,
         student_tz
@@ -82,10 +82,15 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
     if (klass_id) {
         reportsFilter.klass_id = klass_id;
     }
+    const startDate = filters?.startDate ?? new Date('2000-01-01');
+    const endDate = filters?.endDate ?? new Date('2100-12-31');
+    const half = filters?.half ?? '';
 
     return new AttReportAndGrade()
         .where(reportsFilter)
         .query(qb => {
+            qb.whereBetween('report_date', [startDate, endDate]);
+            qb.where(bookshelf.knex.raw('COALESCE(half, "' + half + '")'), 'like', '%' + half + '%');
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('klasses', { 'klasses.key': 'att_reports_and_grades.klass_id', 'klasses.user_id': 'att_reports_and_grades.user_id' })
@@ -110,7 +115,7 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id) {
 }
 
 
-async function getApprovedAbsTotalCount(user_id, student_tz, klass_id) {
+async function getApprovedAbsTotalCount(user_id, student_tz, klass_id, filters) {
     const reportsFilter = {
         'known_absences.user_id': user_id,
         student_tz
@@ -118,10 +123,13 @@ async function getApprovedAbsTotalCount(user_id, student_tz, klass_id) {
     if (klass_id) {
         reportsFilter.klass_id = klass_id;
     }
+    const startDate = filters?.startDate ?? new Date('2000-01-01');
+    const endDate = filters?.endDate ?? new Date('2100-12-31');
 
     return new KnownAbsence()
         .where(reportsFilter)
         .query(qb => {
+            qb.whereBetween('report_date', [startDate, endDate]);
             qb.groupBy('student_tz')
                 .sum({
                     total: 'absnce_count',

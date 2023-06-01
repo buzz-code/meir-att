@@ -103,7 +103,7 @@ function getStudentReportHeader(user_id) {
 
 export async function getStudentReportStream(student_tz, klass_id, user_id, reportParams) {
     const templatePath = path.join(templatesDir, "student-report.ejs");
-    const templateData = await getStudentReportData(student_tz, klass_id, user_id);
+    const templateData = await getStudentReportData(student_tz, klass_id, user_id, reportParams.filters);
     templateData.reportParams = reportParams;
     templateData.footerImage = await loadFileData('image', ['img', `user-${user_id}-end.png`]);
     const userHeaderImage = getStudentReportHeader(user_id);
