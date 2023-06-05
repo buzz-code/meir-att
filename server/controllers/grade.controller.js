@@ -17,7 +17,7 @@ export async function findAll(req, res) {
         .query(qb => {
             qb.leftJoin('students', { 'students.tz': 'grades.student_tz', 'students.user_id': 'grades.user_id' })
             qb.leftJoin('teachers', { 'teachers.tz': 'grades.teacher_id', 'teachers.user_id': 'grades.user_id' })
-            qb.leftJoin('klasses', {'klasses.key': 'grades.klass_id', 'klasses.user_id': 'grades.user_id'})
+            qb.leftJoin('klasses', { 'klasses.key': 'grades.klass_id', 'klasses.user_id': 'grades.user_id' })
             qb.leftJoin('lessons', { 'lessons.key': 'grades.lesson_id', 'lessons.user_id': 'grades.user_id' })
             qb.select('grades.*')
         });
@@ -47,7 +47,7 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res, ctrl) {
     try {
-        const response = await getAndParseExcelEmailV2WithResponse(req, attachment => {
+        const response = await getAndParseExcelEmailV2WithResponse(req, async attachment => {
             const { data, sheetName } = attachment;
             const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'grade', 'comments'];
             const body = getDataToSave(data, columns);
@@ -60,10 +60,11 @@ export async function handleEmail(req, res, ctrl) {
                 item.report_date = report_date;
                 // item.sheet_name = sheetName;
             });
-            return bookshelf.transaction(transaction => (
+            await bookshelf.transaction(transaction => (
                 Grade.collection(body)
                     .invokeThen("save", null, { method: "insert", transacting: transaction })
             ))
+            return body.length;
         });
         res.send({ success: true, message: response });
     } catch (e) {

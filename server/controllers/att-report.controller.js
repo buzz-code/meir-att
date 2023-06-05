@@ -49,7 +49,7 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res, ctrl) {
     try {
-        const response = await getAndParseExcelEmailV2WithResponse(req, attachment => {
+        const response = await getAndParseExcelEmailV2WithResponse(req, async attachment => {
             const { data, sheetName } = attachment;
             const columns = ['klass_id', 'student_tz', '', 'teacher_id', 'lesson_id', 'how_many_lessons', 'abs_count'/*, 'approved_abs_count'*/, 'comments'];
             const body = getDataToSave(data, columns);
@@ -58,17 +58,18 @@ export async function handleEmail(req, res, ctrl) {
             }
             const report_date = new Date().toISOString().substr(0, 10);
             body.forEach(item => {
-                if(!item.how_many_lessons || item.how_many_lessons === '0') {
+                if (!item.how_many_lessons || item.how_many_lessons === '0') {
                     throw new Error('מספר השעורים 0 אי אפשר לקלוט את הקובץ');
                 }
                 item.user_id = req.query.userId;
                 item.report_date = report_date;
                 item.sheet_name = sheetName;
             });
-            return bookshelf.transaction(transaction => (
+            await bookshelf.transaction(transaction => (
                 AttReport.collection(body)
                     .invokeThen("save", null, { method: "insert", transacting: transaction })
             ))
+            return body.length;
         });
         res.send({ success: true, message: response });
     } catch (e) {
@@ -243,7 +244,7 @@ export async function reportWithKnownAbsences(req, res) {
             abs_count: 'abs_count',
             approved_abs_count: 'approved_abs_count',
         })
-        
+
         const lessons_sum = 'GREATEST(sum(how_many_lessons), 1)';
         const abs_count_sum = 'sum(abs_count)';
         const abs_ratio = `${abs_count_sum} / ${lessons_sum}`;

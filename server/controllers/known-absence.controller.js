@@ -45,7 +45,7 @@ export async function getEditData(req, res) {
 
 export async function handleEmail(req, res, ctrl) {
     try {
-        const response = await getAndParseExcelEmailV2WithResponse(req, attachment => {
+        const response = await getAndParseExcelEmailV2WithResponse(req, async attachment => {
             const { data, sheetName } = attachment;
             const columns = ['student_tz', '', 'lesson_id', 'klass_id', 'report_month', 'absnce_count', 'absnce_code', 'sender_name', 'reason', 'comment'];
             const body = getDataToSave(data, columns);
@@ -57,10 +57,11 @@ export async function handleEmail(req, res, ctrl) {
                 item.user_id = req.query.userId;
                 item.report_date = report_date;
             });
-            return bookshelf.transaction(transaction => (
+            await bookshelf.transaction(transaction => (
                 KnownAbsence.collection(body)
                     .invokeThen("save", null, { method: "insert", transacting: transaction })
             ))
+            return body.length;
         });
         res.send({ success: true, message: response });
     } catch (e) {
