@@ -36,6 +36,8 @@ const getFilters = ({ teachers, klasses }) => [
     list: teachers,
     idField: 'tz',
   },
+  { field: 'end_date', label: 'מתאריך', type: 'date', operator: 'date-before' },
+  { field: 'start_date', label: 'עד תאריך', type: 'date', operator: 'date-after' },
 ];
 const getActions = (
   handleSendEmailWithFileAtt,
