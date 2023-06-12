@@ -190,10 +190,16 @@ export async function getTemplateDataByLessonId(lesson_id) {
     const lesson = await new Lesson().where({ id: lesson_id })
         .fetch({ withRelated: ['teacher', 'klass'] })
         .then(res => res.toJSON());
-    const students = await getStudentsByUserIdAndKlassIds(lesson.user_id, lesson.klasses);
+    const [students, teacher, klass] = await Promise.all([
+        getStudentsByUserIdAndKlassIds(lesson.user_id, lesson.klasses),
+        lesson.teacher_id && new Teacher().where({ user_id: lesson.user_id, tz: lesson.teacher_id }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
+        lesson.klasses && new Klass().where({ user_id: lesson.user_id, key: lesson.klasses }).fetch({ require: false }).then(res => res ? res.toJSON() : null),
+    ]);
 
     return {
         lesson,
+        teacher,
+        klass,
         rows: students
             .sort((a, b) => a.name?.localeCompare(b.name))
             .map(student => ({
