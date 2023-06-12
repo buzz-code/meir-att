@@ -40,6 +40,7 @@ const getFilters = ({ students, klasses }) => [
   { field: 'att_reports.report_date', label: 'מתאריך', type: 'date' },
   { field: 'att_reports.report_date', label: 'עד תאריך', type: 'date' },
   { field: 'att_reports.half', label: 'מחצית', type: 'text' },
+  { field: 'lessons.name', label: 'שם שיעור מכיל', type: 'text' },
 ];
 
 const getActions = (handleDownloadStudentReport) => [
@@ -72,6 +73,7 @@ const StudentKlassesKlassTypeontainer = ({ entity, title }) => {
           startDate: conditions[3]?.value,
           endDate: conditions[4]?.value,
           half: conditions[5]?.value,
+          lessonName: conditions[6]?.value,
         })
       );
     },

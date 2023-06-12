@@ -98,9 +98,9 @@ export async function downloadStudentReport(req, res) {
         if ([5].includes(req.currentUser.id)) {
             reportParams.groupByKlass = true;
         }
-        const { body: { ids, klass, personalNote, startDate, endDate, half } } = req;
+        const { body: { ids, klass, personalNote, startDate, endDate, half, lessonName } } = req;
         reportParams.personalNote = personalNote;
-        reportParams.filters = { startDate, endDate, half };
+        reportParams.filters = { startDate, endDate, half, lessonName };
         const { fileStream, filename } = await getStudentReportMergedPdfStream(ids, klass, req.currentUser.id, reportParams);
         downloadFileFromStream(fileStream, filename, 'pdf', res);
     } catch (e) {

@@ -91,6 +91,8 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id, filt
         .query(qb => {
             qb.whereBetween('report_date', [startDate, endDate]);
             qb.where(bookshelf.knex.raw('COALESCE(half, "' + half + '")'), 'like', '%' + half + '%');
+            if (filters?.lessonName)
+                qb.where('lessons.name', 'like', '%' + filters.lessonName + '%');
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('klasses', { 'klasses.key': 'att_reports_and_grades.klass_id', 'klasses.user_id': 'att_reports_and_grades.user_id' })
