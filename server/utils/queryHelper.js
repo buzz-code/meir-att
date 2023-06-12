@@ -96,11 +96,12 @@ async function getAttReportsForStudentReport(user_id, student_tz, klass_id, filt
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
                 .leftJoin('klasses', { 'klasses.key': 'att_reports_and_grades.klass_id', 'klasses.user_id': 'att_reports_and_grades.user_id' })
-                .groupBy('lessons.name', 'lesson_id', 'teachers.name', 'klasses.name', 'klasses.klass_type_id')
+                .groupBy('lessons.name', 'lesson_id', 'teachers.name', 'klasses.id', 'klasses.klass_type_id')
                 .select({
                     lesson_name: 'lessons.name',
                     teacher_name: 'teachers.name',
                     klass_name: 'klasses.name',
+                    klass_id: 'klasses.key',
                     klass_type_id: 'klasses.klass_type_id'
                 })
                 .sum({
@@ -132,15 +133,15 @@ async function getApprovedAbsTotalCount(user_id, student_tz, klass_id, filters) 
         .where(reportsFilter)
         .query(qb => {
             qb.whereBetween('report_date', [startDate, endDate]);
-            qb.groupBy('student_tz')
+            qb.groupBy('student_tz', 'klass_id')
                 .sum({
                     total: 'absnce_count',
                 })
-                .select('student_tz')
+                .select('student_tz', 'klass_id')
         })
         .fetchAll()
         .then(res => res.toJSON())
-        .then(res => res[0])
+        .then(res => Object.fromEntries(res.map(item => ([item.klass_id, item.total]))));
 }
 
 function getAttGradeEffect(user_id) {
