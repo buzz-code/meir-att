@@ -290,7 +290,14 @@ export async function getStudentPercentsReport(req, res) {
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_and_grades.teacher_id', 'teachers.user_id': 'att_reports_and_grades.user_id' })
             qb.leftJoin('klasses', { 'klasses.key': 'att_reports_and_grades.klass_id', 'klasses.user_id': 'att_reports_and_grades.user_id' })
             qb.leftJoin('lessons', { 'lessons.key': 'att_reports_and_grades.lesson_id', 'lessons.user_id': 'att_reports_and_grades.user_id' })
-            qb.leftJoin('known_absences', { 'known_absences.lesson_id': 'att_reports_and_grades.lesson_id', 'known_absences.user_id': 'att_reports_and_grades.user_id', 'known_absences.student_tz': 'att_reports_and_grades.student_tz' })
+            const knownAbsencesFilter = { 'known_absences.lesson_id': 'att_reports_and_grades.lesson_id', 'known_absences.user_id': 'att_reports_and_grades.user_id', 'known_absences.student_tz': 'att_reports_and_grades.student_tz' };
+            qb.leftJoin(
+                bookshelf.knex('known_absences')
+                    .select(...Object.keys(knownAbsencesFilter), { absnce_count: bookshelf.knex.raw('sum(absnce_count)') })
+                    .where(knownAbsencesFilter)
+                    .groupBy(...Object.keys(knownAbsencesFilter)).as('known_absences'),
+                knownAbsencesFilter
+            )
         });
     applyFilters(dbQuery, req.query.filters);
 
