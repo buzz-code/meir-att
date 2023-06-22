@@ -295,7 +295,8 @@ export async function getStudentPercentsReport(req, res) {
                 bookshelf.knex('known_absences')
                     .select(...Object.keys(knownAbsencesFilter), { absnce_count: bookshelf.knex.raw('sum(absnce_count)') })
                     .where(knownAbsencesFilter)
-                    .groupBy(...Object.keys(knownAbsencesFilter)).as('known_absences'),
+                    .groupBy(...Object.keys(knownAbsencesFilter))
+                    .as('known_absences'),
                 knownAbsencesFilter
             )
         });
