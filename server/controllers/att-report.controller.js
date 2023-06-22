@@ -320,7 +320,7 @@ export async function getStudentPercentsReport(req, res) {
         const abs_ratio = `(${abs_count}) / GREATEST(sum(how_many_lessons), 1)`;
         const getPercents = sql => `FORMAT(${sql} * 100, 0)`;
         const att_percents = getPercents(`(1 - ${abs_ratio})`);
-        const att_grade_effect = `att_grade_func(att_reports_and_grades.user_id, ${att_percents}, ${abs_count})`
+        const att_grade_effect = `IF(${abs_ratio} <= 1, att_grade_func(att_reports_and_grades.user_id, ${att_percents}, ${abs_count}), 0)`;
         qb.select({
             percents: bookshelf.knex.raw(abs_ratio),
             percents_formatted: bookshelf.knex.raw(`IF(
