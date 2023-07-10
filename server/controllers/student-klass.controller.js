@@ -83,7 +83,7 @@ export async function reportByKlassType(req, res) {
 export async function downloadStudentReport(req, res) {
     try {
         const reportParams = {};
-        if ([1].includes(req.currentUser.id)) {
+        if ([1, 3].includes(req.currentUser.id)) {
             reportParams.grades = true;
         }
         if ([1].includes(req.currentUser.id)) {
