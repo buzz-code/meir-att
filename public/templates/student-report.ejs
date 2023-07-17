@@ -78,7 +78,7 @@
     <body>
         <%- include('header', { img }); %>
 
-        <% var reportDataArr = [{reports}] %>
+        <% var reportDataArr = [{reports, id: student_base_klass.id}] %>
         <% if (reportParams.groupByKlass) { %>
             <% var klasses = {} %>
             <% reports.forEach(item => {
@@ -193,11 +193,15 @@
                                 <th>&nbsp;</th>
                             <% } %>
                             <th>
+                                <% var approved_abs_value = approved_abs_count?.[reportData.id] %>
+                                <% if (!reportParams.groupByKlass) { %>
+                                    <% approved_abs_value = Object.values(approved_abs_count)[0] %>
+                                <% } %>
                                 <%= 
                                     Math.round(
                                         (
                                             (
-                                                total_att_count + (approved_abs_count?.[reportData.id] || 0)
+                                                total_att_count + (approved_abs_value || 0)
                                             ) / total_lesson_count
                                         ) * 100
                                     )
