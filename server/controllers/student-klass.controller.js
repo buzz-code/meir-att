@@ -95,7 +95,7 @@ export async function downloadStudentReport(req, res) {
         if ([1].includes(req.currentUser.id)) {
             reportParams.hideAbsTotal = true;
         }
-        if ([5].includes(req.currentUser.id)) {
+        if ([5, 7].includes(req.currentUser.id)) {
             reportParams.groupByKlass = true;
         }
         const { body: { ids, klass, personalNote, startDate, endDate, half, lessonName } } = req;
