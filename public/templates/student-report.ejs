@@ -28,9 +28,9 @@
                 -ms-justify-content: space-around;
                 justify-content: space-around;
                 padding-bottom: 4px;
-                padding-inline: 10%;
+                padding-inline: 20px;
             }
-            h1, h2, h3 {
+            h1, h2, h3, h4 {
                 margin: 0;
             }
             .value {
@@ -101,17 +101,17 @@
             </div>
             <div class="header-wrapper">
                 <% if (student) { %>
-                    <h2>שם התלמידה: 
+                    <h4>שם התלמידה: 
                         <span class="value"><%= student.name %></span>
-                    </h2>
-                    <h2>מספר תז: 
+                    </h4>
+                    <h4>מספר תז: 
                         <span class="value"><%= student.tz %></span>
-                    </h2>
+                    </h4>
                 <% } %>
                 <% if (student_base_klass && !reportParams.groupByKlass) { %>
-                    <h2>כיתה: 
+                    <h4>כיתה: 
                         <span class="value"><%= student_base_klass.student_base_klass %></span>
-                    </h2>
+                    </h4>
                 <% } %>
             </div>
 
