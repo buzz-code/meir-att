@@ -38,7 +38,7 @@
             }
             .report-data-wrapper {
                 page-break-inside: avoid;
-                padding-top: 1rem;
+                padding-top: 2rem;
             }
             table {
                 border-collapse: collapse;
@@ -63,10 +63,11 @@
                 min-width: 60px;
             }
             .end-image {
-                position: fixed;
+                position: static;
                 bottom: 0;
                 right: 0;
                 width: 100%;
+                padding-top: 1rem;
             }
             small.notice {
                 position: absolute;
@@ -146,7 +147,7 @@
                                     <td class="full-cell"><%= report.lesson_name %></td>
                                     <td class="full-cell"><%= report.teacher_name %></td>
 
-                                    <% var att_percents = Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %> 
+                                    <% var att_percents = Math.round((((report.lessons ?? 1) - (report.abs_count ?? 0)) / (report.lessons ?? 1)) * 100) %> 
                                     
                                     <% if (report.lessons * 2 == report.abs_count) { %>
                                         <td class="full-cell"><%= report.grade %></td>
