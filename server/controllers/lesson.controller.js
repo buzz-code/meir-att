@@ -44,8 +44,8 @@ export async function sendEmailWithFile(req, res) {
             content: fileBuffer.toString('base64'),
             filename,
         };
-        const body = Format(bodyText, templateData.lesson.teacher.name, templateData.lesson.name);
-        await sendEmail(templateData.lesson.teacher.email, from_email, subjectText, undefined, body, reply_to, [attachment]);
+        const body = Format(bodyText, templateData.teacher.name, templateData.lesson.name);
+        await sendEmail(templateData.teacher.email, from_email, subjectText, undefined, body, reply_to, [attachment]);
     }
 
     res.json({
