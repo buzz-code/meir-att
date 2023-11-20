@@ -113,6 +113,7 @@ export async function getPivotData(req, res) {
     const studentsRes = await fetchPagePromise({ dbQuery, countQuery }, req.query);
 
     const pivotQuery = new AttReportWithKnownAbsences()
+        .where({ 'att_reports_with_known_absences.user_id': req.currentUser.id })
         .where('att_reports_with_known_absences.student_tz', 'in', studentsRes.data.map(item => item.tz))
         .query(qb => {
             qb.leftJoin('teachers', { 'teachers.tz': 'att_reports_with_known_absences.teacher_id', 'teachers.user_id': 'att_reports_with_known_absences.user_id' })

@@ -108,6 +108,7 @@ export async function getPivotData(req, res) {
     const studentsRes = await fetchPagePromise({ dbQuery, countQuery }, req.query);
 
     const pivotQuery = new Grade()
+        .where({ 'grades.user_id': req.currentUser.id })
         .where('grades.student_tz', 'in', studentsRes.data.map(item => item.tz))
         .query(qb => {
             qb.leftJoin('teachers', { 'teachers.tz': 'grades.teacher_id', 'teachers.user_id': 'grades.user_id' })
